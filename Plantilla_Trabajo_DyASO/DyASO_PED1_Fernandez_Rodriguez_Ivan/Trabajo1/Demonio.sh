@@ -39,10 +39,19 @@ while true; do
     if [ -e Apocalipsis ]; then
         # Eliminación de todos los procesos de las listas
       	pServicio="procesos_servicio"
-		while IFS=' ' read -r pidServ comando_completo; do
-        	comando=$(echo "$comando_completo" | awk '{print $1}' | sed "s/'//") # Devuelve la palabra reservada del comando sin comillas
-    		pkill $comando
-		done < "$pServicio"
+		while IFS=' ' read -r ppidServ comandoPS_completo; do
+        	comandoPS=$(echo "$comandoPS_completo" | awk '{print $1}' | sed "s/'//") # Devuelve la palabra reservada del comando sin comillas
+			pkill yes
+			pkill "$comandoPS"
+		done
+
+		procesos="procesos"
+		while IFS=' ' read -r ppid comandoP_completo; do
+			comandoP=$(echo "comandoP_completo" | awk '{print $1}' | sed "s/'//")
+			pkill "$comandoP"
+			kill "$ppid"	#Elimina al padre
+			pkill sleep
+		done < "$procesos"
 
 		find -type f \( ! -name "*.sh" -a ! -name "Biblia.txt" \) -exec rm -f {} \;
 		find -type d -exec rm -r -f;
