@@ -13,34 +13,53 @@
 #Apocalipsis: termino todos los procesos y limpio todo dejando sólo Fausto, el Demonio y la Biblia
 
 # FUNCIONES
-# Resurreccion de proceso
-resucitar() {
-	local proceso="$1"
-	echo "El demonio ha resucitado a '$1'" >> Biblia.txt
-	./"$proceso".sh &
+
+# Comprobación de existencia de un proceso por PID
+proceso_en_ejecucion() {
+    local pid="$1"
+    if ps -p "$pid" > /dev/null; then
+        return 0  # El proceso está en ejecución
+    else
+        return 1  # El proceso no está en ejecución
+    fi
 }
 
-time=$(date +%H:%M:%S)
+# Resurrección de proceso
+resucitar() {
+    local pid="$1"
+    local comando="$2"
+    eval "$comando" &
+    echo "El demonio ha resucitado al proceso con PID $pid" >> Biblia.txt
+}
+
 while true; do
-	sleep 1 #espera 1 segundo
-	# comprobacion apocalipsis
-	if [ -e Apocalipsis ]; then
-		# eliminacion del proceso demonio
-		pid_demonio=$(ps -C 'Demonio.sh' -o pid,cmd | grep -v 'color' | awk '{print $1}' | sed '/^PID$/d')
-		for pid in $pid_demonio; do
-			kill -9 "$pid"
+    sleep 1  # Espera 1 segundo
+
+    # Comprobación del apocalipsis
+    if [ -e Apocalipsis ]; then
+        # Eliminación de todos los procesos excepto Fausto, el Demonio y la Biblia
+        for procesos in "procesos"; do
+			pid=$(echo "$proceso" | awk '{print $1}')
+			kill "$pid" 2>/dev/null
 		done
-	fi
 
-	# comprobacion procesos-servicio
-	for proceso in "$procesos_servicio"; do
-		#Comprueba que el proceso esta en ejecucion
-		
-	done
+		for procesos in "procesos_servicio"; do
+			pid=$(echo "$proceso" | awk '{print $1}')
+			kill "$pid" 2>/dev/null
+		done
+
+        rm -f Apocalipsis
+		pidDemonio=$(pgrep -f -o "Demonio.sh")
+		kill &pidDemonio
+    fi
+
+    # Comprobación procesos-servicio
+    pServicio="procesos_servicio"
+    while IFS=' ' read -r pidServ comando; do
+        if proceso_en_ejecucion "$pidServ"; then
+            echo "El proceso con PID $pidServ está en ejecución"
+        else
+            resucitar "$pidServ" "$comando"
+        fi
+    done < "$pServicio"
 done
-
-
-
-
-
-
