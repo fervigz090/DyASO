@@ -44,8 +44,9 @@ while true; do
     		pkill $comando
 		done < "$pServicio"
 
-		find -type f \( ! -name "*.sh" -a ! -name "Biblia.txt" \) -exec rm {} \;
-		find -type d \( ! -name "*.sh" -a ! -name "Biblia.txt" \) -exec rm -r -f;
+		find -type f \( ! -name "*.sh" -a ! -name "Biblia.txt" \) -exec rm -f {} \;
+		find -type d -exec rm -r -f;
+		rm -r -f Infierno
 		kill $$ # Demonio.sh se elimina a si mismo
     fi
 
