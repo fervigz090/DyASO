@@ -38,9 +38,18 @@ while true; do
     # Comprobación del apocalipsis
     if [ -e Apocalipsis ]; then
         # Eliminación de todos los procesos excepto Fausto, el Demonio y la Biblia
-      	
+        for procesos in "procesos"; do
+			comando=$(echo "$proceso" | awk '{print $2}')
+			pkill "$comando" 2>/dev/null
+		done
+
+		for procesos in "procesos_servicio"; do
+			comando=$(echo "$proceso" | awk '{print $2}')
+			pkill "$comando" 2>/dev/null
+		done
+
         rm -f Apocalipsis
-		kill $$ # Demonio.sh se elimina a si mismo
+		kill $(pgrep "Demonio")
     fi
 
     # Comprobación procesos-servicio

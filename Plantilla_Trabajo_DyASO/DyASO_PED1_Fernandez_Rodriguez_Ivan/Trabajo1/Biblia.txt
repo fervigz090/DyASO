@@ -1,2 +1,4 @@
-11:40:19: -------------Genesis-------------
-11:40:19: El demonio ha sido creado.
+12:41:19: -------------Genesis-------------
+12:41:19: El demonio ha sido creado.
+12:41:25: El proceso 171650 'sleep 10; echo hola' ha nacido
+12:41:59: El proceso 171999 'yes > /dev/null' ha nacido
