@@ -37,9 +37,15 @@ while true; do
 
     # Comprobación del apocalipsis
     if [ -e Apocalipsis ]; then
-        # Eliminación de todos los procesos excepto Fausto, el Demonio y la Biblia
-      	
-        rm -f Apocalipsis
+        # Eliminación de todos los procesos de las listas
+      	pServicio="procesos_servicio"
+		while IFS=' ' read -r pidServ comando_completo; do
+        	comando=$(echo "$comando_completo" | awk '{print $1}' | sed "s/'//") # Devuelve la palabra reservada del comando sin comillas
+    		pkill $comando
+		done < "$pServicio"
+
+		find -type f \( ! -name "*.sh" -a ! -name "Biblia.txt" \) -exec rm {} \;
+		find -type d \( ! -name "*.sh" -a ! -name "Biblia.txt" \) -exec rm -r -f;
 		kill $$ # Demonio.sh se elimina a si mismo
     fi
 
