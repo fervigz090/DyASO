@@ -41,9 +41,8 @@ while true; do
       	pServicio="procesos_servicio"
 		while IFS=' ' read -r ppidServ comandoPS_completo; do
         	comandoPS=$(echo "$comandoPS_completo" | awk '{print $1}' | sed "s/'//") # Devuelve la palabra reservada del comando sin comillas
-			pkill yes
 			pkill "$comandoPS"
-		done
+		done < "$pServicio"
 
 		procesos="procesos"
 		while IFS=' ' read -r ppid comandoP_completo; do
