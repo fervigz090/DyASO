@@ -9,7 +9,7 @@ inicializar (){
 	touch procesos_servicio
 	touch Biblia.txt
 	touch SanPedro
-	mkdir Infierno
+	mkdir infierno
 }
 
 # Borrado inicial
@@ -33,7 +33,7 @@ borrado (){
 	rm -f Biblia.txt
 	rm -f Apocalipsis
 	rm -f SanPedro
-	rm -f -R Infierno
+	rm -f -R infierno
 }
 
 # Invocacion del demonio
@@ -100,7 +100,7 @@ else
 			echo " ./Fausto.sh end"
 			;;
 		"stop")
-			echo "stop ok"
+			echo "'$2'"
 			;;
 		"end")
 			touch Apocalipsis

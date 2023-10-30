@@ -54,7 +54,7 @@ while true; do
 
 		find -type f \( ! -name "*.sh" -a ! -name "Biblia.txt" \) -exec rm -f {} \;
 		find -type d -exec rm -r -f;
-		rm -r -f Infierno
+		rm -r -f infierno
 		kill $$ # Demonio.sh se elimina a si mismo
     fi
 
