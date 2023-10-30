@@ -79,19 +79,34 @@ else
 			echo "run-periodic ok"
 			;;
 		"list")
-			echo "list ok"
+			echo "***** Procesos normales *****"
+			procesos="procesos"
+            while IFS=' ' read -r ppid comandoP_completo; do
+                comandoP=$(echo "comandoP_completo" | awk '{print $1}' | sed "s/'//")
+              
+            done < "$procesos"
+			echo "***** Procesos servicio *****"
+
+			echo "***** Procesos periodicos *****"
 			;;
 		"help")
-			echo "help ok"
+			echo "Sintaxis:"
+			echo " ./Fausto.sh run comando"
+			echo " ./Fausto.sh run-service comando"
+			echo " ./Fausto.sh run-periodic T comando"
+			echo " ./Fausto.sh list"
+			echo " ./Fausto.sh help"
+			echo " ./Fausto.sh stop PID"
+			echo " ./Fausto.sh end"
 			;;
 		"stop")
 			echo "stop ok"
 			;;
 		"end")
-			echo "exit ok"
+			touch Apocalipsis
 			;;
 		*)
-			echo "*"
+			echo "Error, orden '$1' no reconocido, consulte las ordenes disponibles con ./Fausto.sh help"
 			;;
 	esac
 fi
