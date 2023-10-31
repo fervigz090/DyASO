@@ -55,8 +55,8 @@ verificar_pid_en_lista() {
 
 	if [ "$check" -eq 0 ]; then
 		echo "Error! el proceso con PID: $pid no esta en ejecucion"
-	else
-		
+	
+		# El proceso esta en ejecucion, asi que buscamos su PPID en las listas
 	fi
 
 }
