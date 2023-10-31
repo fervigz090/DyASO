@@ -15,18 +15,6 @@ inicializar (){
 # Borrado inicial
 borrado (){
 
-	# Matar procesos de lista procesos
-	for proceso in "$procesos"; do
-		pid=$(echo "$proceso" | awk '{print $1}')
-		kill "$pid" 2>/dev/null
-	done
-
-	# Matar procesos de lista procesos_servicio
-	for proceso in "$procesos_servicio"; do
-		pid=$(echo "$proceso" | awk '{print $1}')
-		kill "$pid" 2>/dev/null
-	done
-
 	rm -f procesos
 	rm -f procesos_servicio
 	rm -f procesos_periodicos
@@ -49,6 +37,28 @@ verificar_y_lanzar_demonio() {
 		echo $time:" -------------Genesis-------------" >> Biblia.txt
 		echo $time:" El demonio ha sido creado." >> Biblia.txt
     fi
+}
+
+# Recorrido lista para verificar PID (funcion STOP)
+verificar_pid_en_lista() {
+	local pid="$1"
+	local lista_procesos="$2"
+	pid_exec=$(ps -l | awk '{print $4}' | grep -v PID)
+	ppid_exec=$(ps -l | awk '{print $5}' | grep -v PPID)
+	check=0
+	for proceso in $pid_exec; do    # comprueba si esta en ejecucion
+   	    if [ "$proceso" == "$pid" ]; then
+		    check=1
+            break   # sale del bucle si encuentra el pid
+		fi
+	done
+
+	if [ "$check" -eq 0 ]; then
+		echo "Error! el proceso con PID: $pid no esta en ejecucion"
+	else
+		
+	fi
+
 }
 
 # Ejecucion del comando
@@ -100,7 +110,7 @@ else
 			echo " ./Fausto.sh end"
 			;;
 		"stop")
-			echo "'$2'"
+			verificar_pid_en_lista "$2" "procesos";
 			;;
 		"end")
 			touch Apocalipsis
