@@ -9,7 +9,7 @@ inicializar (){
 	touch procesos_servicio
 	touch Biblia.txt
 	touch SanPedro
-	mkdir infierno
+	mkdir -m 766 infierno # damos permisos de lectura y escritura
 }
 
 # Borrado inicial
@@ -42,21 +42,33 @@ verificar_y_lanzar_demonio() {
 # Recorrido lista para verificar PID (funcion STOP)
 verificar_pid_en_lista() {
 	local pid="$1"
-	local lista_procesos="$2"
+	local lista_procesos=$(awk '{print $1}' "$2") #nos quedamos con el ppid solo
 	pid_exec=$(ps -l | awk '{print $4}' | grep -v PID)
-	ppid_exec=$(ps -l | awk '{print $5}' | grep -v PPID)
 	check=0
+	ppid=''
 	for proceso in $pid_exec; do    # comprueba si esta en ejecucion
    	    if [ "$proceso" == "$pid" ]; then
 		    check=1
+			ppid=$(ps -o ppid= -p "$proceso")
+            ppid=${ppid#"${ppid%%[![:space:]]*}"}   # sustitucion de patrones para eliminar espacios en blanco.
+            echo "$ppid"
             break   # sale del bucle si encuentra el pid
 		fi
 	done
 
 	if [ "$check" -eq 0 ]; then
 		echo "Error! el proceso con PID: $pid no esta en ejecucion"
-	
-		# El proceso esta en ejecucion, asi que buscamos su PPID en las listas
+	else	# El proceso esta en ejecucion, asi que buscamos su PPID en las listas
+		for proceso in $lista_procesos; do	# comprueba si el proceso esta en la lista
+			if [ "$proceso" == "$ppid" ]; then
+				sudo touch /infierno "$pid"
+                break   # sale del bucle si el ppid esta en la lista
+			else
+				echo "Error! el proceso '$pid' no se encuentra en las listas."
+				echo "Comprobar con el comando './Fausto.sh list'"
+                echo "Su PPID es '$ppid'"
+			fi
+		done
 	fi
 
 }
@@ -110,7 +122,7 @@ else
 			echo " ./Fausto.sh end"
 			;;
 		"stop")
-			verificar_pid_en_lista "$2" "procesos";
+			verificar_pid_en_lista "$2" "procesos_servicio";
 			;;
 		"end")
 			touch Apocalipsis
