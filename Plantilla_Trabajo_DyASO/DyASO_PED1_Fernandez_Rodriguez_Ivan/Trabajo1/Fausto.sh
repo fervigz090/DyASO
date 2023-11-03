@@ -9,7 +9,7 @@ inicializar (){
 	touch procesos_servicio
 	touch Biblia.txt
 	touch SanPedro
-	mkdir -m 766 infierno # damos permisos de lectura y escritura
+	mkdir -m 777 infierno
 }
 
 # Borrado inicial
@@ -61,7 +61,9 @@ verificar_pid_en_lista() {
 	else	# El proceso esta en ejecucion, asi que buscamos su PPID en las listas
 		for proceso in $lista_procesos; do	# comprueba si el proceso esta en la lista
 			if [ "$proceso" == "$ppid" ]; then
-				sudo touch /infierno "$pid"
+				cd infierno
+				touch "$pid"
+				chmod 666 "$pid"	#Asignamos permisos infernales
                 break   # sale del bucle si el ppid esta en la lista
 			else
 				echo "Error! el proceso '$pid' no se encuentra en las listas."
