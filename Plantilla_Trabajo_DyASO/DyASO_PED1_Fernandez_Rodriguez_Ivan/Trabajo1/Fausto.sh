@@ -105,7 +105,7 @@ else
 			t_arranque=0
 			bash -c "$comando" &
 			pid=$!
-			echo "$t_arranque $periodo_T $pid $comando" >> procesos_periodicos
+			echo "$t_arranque $periodo_T $pid '$comando'" >> procesos_periodicos
 			echo "$time: El proceso $pid '$comando' ha nacido" >> Biblia.txt
 			;;
 		"list")

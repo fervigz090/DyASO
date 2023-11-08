@@ -1,5 +1,7 @@
-10:27:11: -------------Genesis-------------
-10:27:11: El demonio ha sido creado.
-10:38:10: El proceso 119054 'echo hola' ha nacido
-10:38:34: El proceso 119293 'echo hola' ha nacido
-10:39:05: -------------Apocalipsis-------------
+11:26:04: -------------Genesis-------------
+11:26:04: El demonio ha sido creado.
+11:26:04: El proceso 145412 'echo cacaaa' ha nacido
+11:26:50: El proceso 145939 'echo cacaaa >> test_cacaa.txt' ha nacido
+11:29:45: El proceso 147900 'echo cacaaa >> test_cacaa.txt' ha nacido
+11:32:58: El proceso 150055 'echo cacaaa' ha nacido
+11:36:03: -------------Apocalipsis-------------

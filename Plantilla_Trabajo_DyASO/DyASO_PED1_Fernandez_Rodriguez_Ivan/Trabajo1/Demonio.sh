@@ -34,8 +34,28 @@ resucitar() {
     echo $time: "El demonio ha resucitado al proceso con PID $pid" >> Biblia.txt
 }
 
+# Comprobacion de procesos periodicos y lanzamiento
+# Parametros: $1(lista) $2
+lanzamiento_periodicos() {
+	local lista_procesos="$1"
+	for proceso in "${lista_procesos[@]}"; do
+    	IFS=' ' read -r tiempo_ejecutado periodo pid comando <<< "$proceso"
+    	current_time=$(date +%s)
+
+    	if ((current_time - tiempo_ejecutado >= periodo)); then
+        	eval "$comando" &
+        	# Actualiza el tiempo de ejecución
+        	lista_procesos[$i]="$current_time $periodo $pid '$comando'"
+			echo "$lista_procesos - $current_time" >> test_cacaa.txt
+    	fi
+	done
+}
+
 while true; do
     sleep 1  # Espera 1 segundo
+
+	# Comprobamos y lanzamos procesos periodicos
+	lanzamiento_periodicos "procesos_periodicos"
 
     # Comprobación del apocalipsis
     if [ -e Apocalipsis ]; then
