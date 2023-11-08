@@ -12,6 +12,7 @@
 
 #Apocalipsis: termino todos los procesos y limpio todo dejando sólo Fausto, el Demonio y la Biblia
 
+time=''
 # FUNCIONES
 
 # Comprobación de existencia de un proceso por PID
@@ -29,7 +30,8 @@ resucitar() {
     local pid="$1"
     local comando="$2"
     eval "$comando" &
-    echo "El demonio ha resucitado al proceso con PID $pid" >> Biblia.txt
+	time=$(date +%H:%M:%S)
+    echo $time: "El demonio ha resucitado al proceso con PID $pid" >> Biblia.txt
 }
 
 while true; do
@@ -38,18 +40,19 @@ while true; do
     # Comprobación del apocalipsis
     if [ -e Apocalipsis ]; then
         # Eliminación de todos los procesos de las listas
+		time=$(date +%H:%M:%S)
+        echo $time:" -------------Apocalipsis-------------" >> Biblia.txt
       	pServicio="procesos_servicio"
 		while IFS=' ' read -r ppidServ comandoPS_completo; do
         	comandoPS=$(echo "$comandoPS_completo" | awk '{print $1}' | sed "s/'//") # Devuelve la palabra reservada del comando sin comillas
 			pkill "$comandoPS"
+			echo $time:" El proceso '$comandoPS' ha terminado" >> Biblia.txt
 		done < "$pServicio"
 
 		procesos="procesos"
 		while IFS=' ' read -r ppid comandoP_completo; do
-			comandoP=$(echo "comandoP_completo" | awk '{print $1}' | sed "s/'//")
-			pkill "$comandoP"
-			kill "$ppid"	#Elimina al padre
-			pkill sleep
+			kill ppid
+			echo $time:" El proceso '$comandoP' ha terminado" >> Biblia.txt
 		done < "$procesos"
 
 		find -type f \( ! -name "*.sh" -a ! -name "Biblia.txt" \) -exec rm -f {} \;

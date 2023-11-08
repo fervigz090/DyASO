@@ -1,0 +1,353 @@
+
+************************************************************
+1) Debería de haberse creado el proceso Demonio
+la salida esperada es algo así
+systemd───systemd───Demonio.sh───sleep
+donde Demonio.sh no debe ser hijo de bash sino de systemd o similar
+************************************************************
+
+systemd---Demonio.sh---sleep
+run-periodic ok
+run-periodic ok
+
+************************************************************
+2) Lanzo algunos comandos y compruebo que se han creado
+Debería de haber un proceso normal
+'sleep 10; echo hola > test1.txt'
+Un proceso servicio 'yes > /dev/null'
+y dos periódicos, el normal y el lento
+Comparamos los procesos teóricamente lanzados y los que
+realmente existen
+************************************************************
+
+Procesos lanzados según Fausto:
+./Fausto.sh list
+***** Procesos normales *****
+***** Procesos servicio *****
+***** Procesos periodicos *****
+
+Procesos existentes:
+ps -l
+F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000   56223   56220  0  80   0 -  4257 sigsus pts/0    00:00:00 zsh
+0 S  1000   57566   56223  0  80   0 -  2339 do_wai pts/0    00:00:00 Ejercicio1.sh
+0 S  1000   57584       1  0  80   0 -  2339 do_wai pts/0    00:00:00 Demonio.sh
+0 S  1000   57587   57584  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000   57588       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 S  1000   57592   57588  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000   57601       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 R  1000   57603   57601 99  80   0 -  1932 -      pts/0    00:00:00 yes
+0 R  1000   57619   57566  0  80   0 -  3401 -      pts/0    00:00:00 ps
+
+************************************************************
+3) Elimino manualmente el proceso yes sin avisar a Fausto.
+El Demonio debería detectarlo y reiniciar el proceso:
+************************************************************
+
+pkill yes
+
+./Fausto.sh list
+***** Procesos normales *****
+***** Procesos servicio *****
+***** Procesos periodicos *****
+
+************************************************************
+4) Elimino el proceso usando Fausto.
+El Demonio NO debe reiniciar el proceso:
+************************************************************
+
+./Fausto.sh stop 
+Error! el proceso con PID:  no esta en ejecucion
+./Fausto.sh list
+***** Procesos normales *****
+***** Procesos servicio *****
+***** Procesos periodicos *****
+ps -l
+F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000   56223   56220  0  80   0 -  4257 sigsus pts/0    00:00:00 zsh
+0 S  1000   57566   56223  0  80   0 -  2339 do_wai pts/0    00:00:00 Ejercicio1.sh
+0 S  1000   57584       1  0  80   0 -  2372 do_wai pts/0    00:00:00 Demonio.sh
+0 S  1000   57588       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 S  1000   57592   57588  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000   57737   57584  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 R  1000   57738   57566  0  80   0 -  3401 -      pts/0    00:00:00 ps
+
+************************************************************
+5) Error de sintaxis provocado para que Fausto nos avise:
+************************************************************
+
+./Fausto.sh asdf
+Error, orden 'asdf' no reconocido, consulte las ordenes disponibles con ./Fausto.sh help
+
+************************************************************
+6) Siguiendo la sugerencia anterior veríamos la ayuda:
+************************************************************
+
+./Fausto.sh help
+Sintaxis:
+ ./Fausto.sh run comando
+ ./Fausto.sh run-service comando
+ ./Fausto.sh run-periodic T comando
+ ./Fausto.sh list
+ ./Fausto.sh help
+ ./Fausto.sh stop PID
+ ./Fausto.sh end
+
+************************************************************
+7) Terminamos la ejecución y vemos los mensajes enviados
+por los procesos lanzados en los ficeheros test 1, 2 y 3
+************************************************************
+
+
+************************************************************
+1) Debería de haberse creado el proceso Demonio
+la salida esperada es algo así
+systemd───systemd───Demonio.sh───sleep
+donde Demonio.sh no debe ser hijo de bash sino de systemd o similar
+************************************************************
+
+systemd---qterminal---zsh---nano
+run-periodic ok
+run-periodic ok
+
+************************************************************
+2) Lanzo algunos comandos y compruebo que se han creado
+Debería de haber un proceso normal
+'sleep 10; echo hola > test1.txt'
+Un proceso servicio 'yes > /dev/null'
+y dos periódicos, el normal y el lento
+Comparamos los procesos teóricamente lanzados y los que
+realmente existen
+************************************************************
+
+Procesos lanzados según Fausto:
+./Fausto.sh list
+***** Procesos normales *****
+***** Procesos servicio *****
+***** Procesos periodicos *****
+
+Procesos existentes:
+ps -l
+F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000   58568   58565  0  80   0 -  4234 sigsus pts/0    00:00:00 zsh
+0 S  1000   64427   58568  0  80   0 -  2339 do_wai pts/0    00:00:00 Ejercicio1.sh
+0 S  1000   64445       1  0  80   0 -  2339 do_wai pts/0    00:00:00 Demonio.sh
+0 S  1000   64448   64445  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000   64449       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 S  1000   64452   64449  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000   64462       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 R  1000   64464   64462 50  80   0 -  1932 -      pts/0    00:00:00 yes
+0 R  1000   64480   64427  0  80   0 -  3401 -      pts/0    00:00:00 ps
+
+************************************************************
+3) Elimino manualmente el proceso yes sin avisar a Fausto.
+El Demonio debería detectarlo y reiniciar el proceso:
+************************************************************
+
+pkill yes
+
+./Fausto.sh list
+***** Procesos normales *****
+***** Procesos servicio *****
+***** Procesos periodicos *****
+
+************************************************************
+4) Elimino el proceso usando Fausto.
+El Demonio NO debe reiniciar el proceso:
+************************************************************
+
+./Fausto.sh stop 
+Error! el proceso con PID:  no esta en ejecucion
+./Fausto.sh list
+***** Procesos normales *****
+***** Procesos servicio *****
+***** Procesos periodicos *****
+ps -l
+F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000   58568   58565  0  80   0 -  4234 sigsus pts/0    00:00:00 zsh
+0 S  1000   64427   58568  0  80   0 -  2339 do_wai pts/0    00:00:00 Ejercicio1.sh
+0 S  1000   64445       1  0  80   0 -  2339 do_wai pts/0    00:00:00 Demonio.sh
+0 S  1000   64449       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 S  1000   64452   64449  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000   64597   64445  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 R  1000   64606   64427  0  80   0 -  3401 -      pts/0    00:00:00 ps
+
+************************************************************
+5) Error de sintaxis provocado para que Fausto nos avise:
+************************************************************
+
+./Fausto.sh asdf
+Error, orden 'asdf' no reconocido, consulte las ordenes disponibles con ./Fausto.sh help
+
+************************************************************
+6) Siguiendo la sugerencia anterior veríamos la ayuda:
+************************************************************
+
+./Fausto.sh help
+Sintaxis:
+ ./Fausto.sh run comando
+ ./Fausto.sh run-service comando
+ ./Fausto.sh run-periodic T comando
+ ./Fausto.sh list
+ ./Fausto.sh help
+ ./Fausto.sh stop PID
+ ./Fausto.sh end
+
+************************************************************
+7) Terminamos la ejecución y vemos los mensajes enviados
+por los procesos lanzados en los ficeheros test 1, 2 y 3
+************************************************************
+
+
+************************************************************
+1) Debería de haberse creado el proceso Demonio
+la salida esperada es algo así
+systemd───systemd───Demonio.sh───sleep
+donde Demonio.sh no debe ser hijo de bash sino de systemd o similar
+************************************************************
+
+systemd---Demonio.sh---sleep
+run-periodic ok
+run-periodic ok
+
+************************************************************
+2) Lanzo algunos comandos y compruebo que se han creado
+Debería de haber un proceso normal
+'sleep 10; echo hola > test1.txt'
+Un proceso servicio 'yes > /dev/null'
+y dos periódicos, el normal y el lento
+Comparamos los procesos teóricamente lanzados y los que
+realmente existen
+************************************************************
+
+Procesos lanzados según Fausto:
+./Fausto.sh list
+***** Procesos normales *****
+102965 'sleep 10; echo hola >> test1.txt'
+***** Procesos servicio *****
+102978 'yes > /dev/null'
+***** Procesos periodicos *****
+
+Procesos existentes:
+ps -l
+F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000   90216   90213  0  80   0 -  4291 sigsus pts/0    00:00:02 zsh
+0 S  1000  102943   90216  0  80   0 -  2339 do_wai pts/0    00:00:00 Ejercicio1.sh
+0 S  1000  102961       1  0  80   0 -  2339 do_wai pts/0    00:00:00 Demonio.sh
+0 S  1000  102964  102961  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000  102965       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 S  1000  102969  102965  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000  102978       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 R  1000  102980  102978 50  80   0 -  1932 -      pts/0    00:00:00 yes
+0 R  1000  102992  102943  0  80   0 -  3401 -      pts/0    00:00:00 ps
+
+************************************************************
+3) Elimino manualmente el proceso yes sin avisar a Fausto.
+El Demonio debería detectarlo y reiniciar el proceso:
+************************************************************
+
+pkill yes
+
+./Fausto.sh list
+***** Procesos normales *****
+102965 'sleep 10; echo hola >> test1.txt'
+***** Procesos servicio *****
+102978 'yes > /dev/null'
+***** Procesos periodicos *****
+
+************************************************************
+4) Elimino el proceso usando Fausto.
+El Demonio NO debe reiniciar el proceso:
+************************************************************
+
+./Fausto.sh stop 102978
+Error! el proceso con PID: 102978 no esta en ejecucion
+./Fausto.sh list
+***** Procesos normales *****
+102965 'sleep 10; echo hola >> test1.txt'
+***** Procesos servicio *****
+102978 'yes > /dev/null'
+***** Procesos periodicos *****
+ps -l
+F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000   90216   90213  0  80   0 -  4291 sigsus pts/0    00:00:02 zsh
+0 S  1000  102943   90216  0  80   0 -  2339 do_wai pts/0    00:00:00 Ejercicio1.sh
+0 S  1000  102961       1  0  80   0 -  2339 do_wai pts/0    00:00:00 Demonio.sh
+0 S  1000  102965       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 S  1000  102969  102965  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000  103099  102961  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 R  1000  103106  102943  0  80   0 -  3401 -      pts/0    00:00:00 ps
+
+************************************************************
+5) Error de sintaxis provocado para que Fausto nos avise:
+************************************************************
+
+./Fausto.sh asdf
+Error, orden 'asdf' no reconocido, consulte las ordenes disponibles con ./Fausto.sh help
+
+************************************************************
+6) Siguiendo la sugerencia anterior veríamos la ayuda:
+************************************************************
+
+./Fausto.sh help
+Sintaxis:
+ ./Fausto.sh run comando
+ ./Fausto.sh run-service comando
+ ./Fausto.sh run-periodic T comando
+ ./Fausto.sh list
+ ./Fausto.sh help
+ ./Fausto.sh stop PID
+ ./Fausto.sh end
+
+************************************************************
+7) Terminamos la ejecución y vemos los mensajes enviados
+por los procesos lanzados en los ficeheros test 1, 2 y 3
+************************************************************
+
+
+************************************************************
+8) Comprobamos que no hay procesos sin terminar.
+Esperamos que sólo salgan bash, Ejercicio1.sh y ps
+************************************************************
+
+    PID TTY          TIME CMD
+  90216 pts/0    00:00:02 zsh
+ 102943 pts/0    00:00:00 Ejercicio1.sh
+ 103201 pts/0    00:00:00 ps
+
+************************************************************
+9) Comprobamos que no hay ficerhos basura.
+Solo deben quedar Fausto.sh, Demonio.sh y la Biblia.txt
+************************************************************
+
+Biblia.txt
+Demonio.sh
+Fausto.sh
+probas.sh
+
+************************************************************
+10) Comprobamos que no hay bloqueos pendientes
+no debería de salir nada:
+************************************************************
+
+
+************************************************************
+11) Finalmente mostramos la Biblia
+************************************************************
+
+10:07:21: -------------Genesis-------------
+10:07:21: El demonio ha sido creado.
+10:07:21: El proceso 102965 'sleep 10; echo hola >> test1.txt' ha nacido
+10:07:21: El proceso 102978 'yes > /dev/null' ha nacido
+10:07:22: El demonio ha resucitado al proceso con PID 102978
+10:07:23: El demonio ha resucitado al proceso con PID 102978
+10:07:24: El demonio ha resucitado al proceso con PID 102978
+10:07:25: El demonio ha resucitado al proceso con PID 102978
+10:07:26: El demonio ha resucitado al proceso con PID 102978
+10:07:27: El demonio ha resucitado al proceso con PID 102978
+10:07:28: El demonio ha resucitado al proceso con PID 102978
+10:07:29: El demonio ha resucitado al proceso con PID 102978
+10:07:30: El demonio ha resucitado al proceso con PID 102978
+10:07:31: -------------Apocalipsis-------------
+10:07:31: El proceso 'yes' ha terminado
+10:07:31: El proceso '' ha terminado

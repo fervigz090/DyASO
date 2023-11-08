@@ -27,9 +27,10 @@ borrado (){
 # Invocacion del demonio
 verificar_y_lanzar_demonio() {
     if pgrep -x "Demonio.sh" >/dev/null; then
-        echo "El proceso Demonio.sh ya está en ejecución."
+        # El proceso demonio esta en ejecucion
+		cat probas.sh > /dev/null
     else
-        echo "El proceso Demonio.sh no está en ejecución. Iniciando..."
+        # El proceso Demonio.sh no está en ejecución. Iniciando..
 		borrado
 		inicializar
         nohup ./Demonio.sh > /dev/null 2>&1 &
@@ -84,17 +85,18 @@ verificar_pid_en_lista() {
 if [ $# -eq 0 ]; then	#Si no hay argumentos se verifica la existencia del demonio
 	verificar_y_lanzar_demonio;
 else
+	verificar_y_lanzar_demonio;
 	time=$(date +%H:%M:%S)
 	comando="$2"
 	case "$1" in
 		"run")	#ejecuta un comando una sola vez
-			bash -c "$2" &	#instancia de bash en segundo plano
+			bash -c "$comando" &	#instancia de bash en segundo plano
 			pid=$!	#obtenemos el pid del proceso bash
 			echo "$pid '$2'" >> procesos
 			echo "$time: El proceso $pid '$2' ha nacido" >> Biblia.txt
 			;;
 		"run-service")
-			bash -c "$2" &
+			bash -c "$comando" &
 			pid=$!
 			echo "$pid '$2'" >> procesos_servicio
 			echo "$time: El proceso $pid '$2' ha nacido" >> Biblia.txt
@@ -104,14 +106,34 @@ else
 			;;
 		"list")
 			echo "***** Procesos normales *****"
-			procesos="procesos"
-            while IFS=' ' read -r ppid comandoP_completo; do
-                comandoP=$(echo "comandoP_completo" | awk '{print $1}' | sed "s/'//")
-              
-            done < "$procesos"
+			# Comprobamos que existe el fichero y que no esta vacio
+			if [ -e procesos ] && [ -s procesos ]; then
+				procesos="procesos"
+				# Recorremos cada linea devolviendola
+            	while IFS=' ' read -r ppid comando; do
+                	echo "$ppid $comando"
+            	done < "$procesos"
+			fi
+
 			echo "***** Procesos servicio *****"
+			# Comprobamos que existe el fichero y que no esta vacio
+			if [ -e procesos_servicio ] && [ -s procesos_servicio ]; then
+				procesos_servicio="procesos_servicio"
+				# Recorremos cada linea del fichero devolviendola.
+				while IFS=' ' read -r ppid comando; do
+					echo "$ppid $comando"
+				done < "$procesos_servicio"
+			fi
 
 			echo "***** Procesos periodicos *****"
+			# Comprobamos que existe el fichero y que no esta vacio
+			if [ -e procesos_periodicos ] && [ -s procesos_periodicos ]; then
+				procesos_periodicos="procesos_periodicos"
+				# Recorremos cada linea del fichero devolviendola
+				while IFS=' ' read -r t_arranque T ppid comando; do
+					echo "$t_arranque $T $ppid $comando"
+				done < "$procesos_periodicos"
+			fi
 			;;
 		"help")
 			echo "Sintaxis:"
