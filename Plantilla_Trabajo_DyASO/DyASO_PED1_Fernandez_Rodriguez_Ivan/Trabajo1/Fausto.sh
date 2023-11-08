@@ -7,6 +7,7 @@
 inicializar (){
 	touch procesos
 	touch procesos_servicio
+	touch procesos_periodicos
 	touch Biblia.txt
 	touch SanPedro
 	mkdir -m 777 infierno
@@ -24,12 +25,9 @@ borrado (){
 	rm -f -R infierno
 }
 
-# Invocacion del demonio
+# Invocacion del demonio. Si ya esta en ejecucion no hace nada.
 verificar_y_lanzar_demonio() {
-    if pgrep -x "Demonio.sh" >/dev/null; then
-        # El proceso demonio esta en ejecucion
-		cat probas.sh > /dev/null
-    else
+    if ! pgrep -x "Demonio.sh" >/dev/null; then
         # El proceso Demonio.sh no está en ejecución. Iniciando..
 		borrado
 		inicializar
@@ -91,7 +89,7 @@ else
 	case "$1" in
 		"run")	#ejecuta un comando una sola vez
 			bash -c "$comando" &	#instancia de bash en segundo plano
-			pid=$!	#obtenemos el pid del proceso bash
+			pid=$!	#obtenemos el pid del hijo mas reciente
 			echo "$pid '$2'" >> procesos
 			echo "$time: El proceso $pid '$2' ha nacido" >> Biblia.txt
 			;;
@@ -102,7 +100,13 @@ else
 			echo "$time: El proceso $pid '$2' ha nacido" >> Biblia.txt
 			;;
 		"run-periodic")
-			echo "run-periodic ok"
+			comando="$3"
+			periodo_T="$2"
+			t_arranque=0
+			bash -c "$comando" &
+			pid=$!
+			echo "$t_arranque $periodo_T $pid $comando" >> procesos_periodicos
+			echo "$time: El proceso $pid '$comando' ha nacido" >> Biblia.txt
 			;;
 		"list")
 			echo "***** Procesos normales *****"
