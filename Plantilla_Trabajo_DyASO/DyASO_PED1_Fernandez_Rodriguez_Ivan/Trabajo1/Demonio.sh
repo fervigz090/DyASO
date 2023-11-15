@@ -29,9 +29,16 @@ proceso_en_ejecucion() {
 resucitar() {
     local pid="$1"
     local comando="$2"
-    eval "$comando" &
+	# Elimina el proceso de la lista, ya que el nuevo no tiene el mismo pid ni ppid
+	sed -i "/$pid/d" procesos_servicio
+	# Lanza de nuevo el comando como hijo de un proceso bash
+	bash -c "$comando" &
+	# Obtiene el pid del padre
+	pid=$!
+	# Guarda el nuevo proceso en la lista
+	echo "$pid '$comando'" >> procesos_servicio
 	time=$(date +%H:%M:%S)
-    echo $time: "El demonio ha resucitado al proceso con PID $pid" >> Biblia.txt
+    echo $time: "El proceso $1 resucita con pid $pid" >> Biblia.txt
 }
 
 # Comprobacion de procesos periodicos y lanzamiento

@@ -1,17 +1,65 @@
-15:55:13: -------------Genesis-------------
-15:55:13: El demonio ha sido creado.
-15:55:13: El proceso 21464 'sleep 10; echo hola >> test1.txt' ha nacido
-15:55:13: El proceso 21477 'yes > /dev/null' ha nacido
-15:55:13: El proceso 21482 'echo hola_periodico >> test2.txt' ha nacido
-15:55:13: El proceso 21486 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
-15:55:14: El demonio ha resucitado al proceso con PID 21477
-15:55:15: El demonio ha resucitado al proceso con PID 21477
-15:55:16: El demonio ha resucitado al proceso con PID 21477
-15:55:17: El demonio ha resucitado al proceso con PID 21477
-15:55:18: El demonio ha resucitado al proceso con PID 21477
-15:55:19: El demonio ha resucitado al proceso con PID 21477
-15:55:20: El demonio ha resucitado al proceso con PID 21477
-15:55:21: El demonio ha resucitado al proceso con PID 21477
-15:55:22: -------------Apocalipsis-------------
-15:55:22: El proceso 'yes' ha terminado
-15:55:22: El proceso '' ha terminado
+17:16:38: -------------Genesis-------------
+17:16:38: El demonio ha sido creado.
+17:16:38: El proceso 77683 'yes > /dev/null' ha nacido
+17:16:39: El proceso 77699 'yes > /dev/null' ha nacido
+17:16:40: El proceso 77714 'yes > /dev/null' ha nacido
+17:19:05: El demonio ha resucitado al proceso con PID 77699
+17:19:06: El demonio ha resucitado al proceso con PID 77699
+17:19:07: El demonio ha resucitado al proceso con PID 77699
+17:19:08: El demonio ha resucitado al proceso con PID 77699
+17:19:09: El demonio ha resucitado al proceso con PID 77699
+17:19:10: El demonio ha resucitado al proceso con PID 77699
+17:19:11: El demonio ha resucitado al proceso con PID 77699
+17:19:12: El demonio ha resucitado al proceso con PID 77699
+17:19:13: El demonio ha resucitado al proceso con PID 77699
+17:19:14: El demonio ha resucitado al proceso con PID 77699
+17:19:15: El demonio ha resucitado al proceso con PID 77699
+17:19:16: El demonio ha resucitado al proceso con PID 77699
+17:19:17: El demonio ha resucitado al proceso con PID 77699
+17:19:18: El demonio ha resucitado al proceso con PID 77699
+17:19:19: El demonio ha resucitado al proceso con PID 77699
+17:19:20: El demonio ha resucitado al proceso con PID 77699
+17:19:21: El demonio ha resucitado al proceso con PID 77699
+17:19:22: El demonio ha resucitado al proceso con PID 77699
+17:19:23: El demonio ha resucitado al proceso con PID 77699
+17:19:24: El demonio ha resucitado al proceso con PID 77699
+17:19:25: El demonio ha resucitado al proceso con PID 77699
+17:19:26: El demonio ha resucitado al proceso con PID 77699
+17:19:27: El demonio ha resucitado al proceso con PID 77699
+17:19:28: El demonio ha resucitado al proceso con PID 77699
+17:19:29: El demonio ha resucitado al proceso con PID 77699
+17:19:30: El demonio ha resucitado al proceso con PID 77699
+17:19:31: El demonio ha resucitado al proceso con PID 77699
+17:19:32: El demonio ha resucitado al proceso con PID 77699
+17:19:33: El demonio ha resucitado al proceso con PID 77699
+17:19:34: El demonio ha resucitado al proceso con PID 77699
+17:19:35: El demonio ha resucitado al proceso con PID 77699
+17:19:36: El demonio ha resucitado al proceso con PID 77699
+17:19:37: El demonio ha resucitado al proceso con PID 77699
+17:19:38: El demonio ha resucitado al proceso con PID 77699
+17:19:39: El demonio ha resucitado al proceso con PID 77699
+17:19:40: El demonio ha resucitado al proceso con PID 77699
+17:19:41: El demonio ha resucitado al proceso con PID 77699
+17:19:42: El demonio ha resucitado al proceso con PID 77699
+17:19:43: El demonio ha resucitado al proceso con PID 77699
+17:19:44: El demonio ha resucitado al proceso con PID 77699
+17:19:45: El demonio ha resucitado al proceso con PID 77699
+17:19:46: El demonio ha resucitado al proceso con PID 77699
+17:19:47: El demonio ha resucitado al proceso con PID 77699
+17:19:48: El demonio ha resucitado al proceso con PID 77699
+17:19:49: El demonio ha resucitado al proceso con PID 77699
+17:19:50: El demonio ha resucitado al proceso con PID 77699
+17:19:51: El demonio ha resucitado al proceso con PID 77699
+17:19:52: El demonio ha resucitado al proceso con PID 77699
+17:19:53: El demonio ha resucitado al proceso con PID 77699
+17:19:54: El demonio ha resucitado al proceso con PID 77699
+17:19:55: El demonio ha resucitado al proceso con PID 77699
+17:19:56: El demonio ha resucitado al proceso con PID 77699
+17:19:57: El demonio ha resucitado al proceso con PID 77699
+17:19:58: El demonio ha resucitado al proceso con PID 77699
+17:19:59: El demonio ha resucitado al proceso con PID 77699
+17:20:00: El demonio ha resucitado al proceso con PID 77699
+17:20:01: El demonio ha resucitado al proceso con PID 77699
+17:20:02: -------------Apocalipsis-------------
+17:20:02: El proceso 'yes' ha terminado
+17:20:02: El proceso 'yes' ha terminado

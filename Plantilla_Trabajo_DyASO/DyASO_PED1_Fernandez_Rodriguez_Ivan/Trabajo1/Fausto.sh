@@ -41,37 +41,12 @@ verificar_y_lanzar_demonio() {
 # Recorrido lista para verificar PID (funcion STOP)
 verificar_eliminar_proceso() {
 	local pid="$1"
-	local lista_procesos=$(awk '{print $1}' "$2") #nos quedamos con el ppid solo
-	pid_exec=$(ps -l | awk '{print $4}' | grep -v PID)
-	check=0
-	ppid=''
-	for proceso in $pid_exec; do    # comprueba si esta en ejecucion
-   	    if [ "$proceso" == "$pid" ]; then
-		    check=1
-			ppid=$(ps -o ppid= -p "$proceso")
-            ppid=${ppid#"${ppid%%[![:space:]]*}"}   # sustitucion de patrones para eliminar espacios en blanco.
-            echo "$ppid"
-            break   # sale del bucle si encuentra el pid
-		fi
-	done
-
-	if [ "$check" -eq 0 ]; then
-		echo "Error! el proceso con PID: $pid no esta en ejecucion"
-	else	# El proceso esta en ejecucion, asi que buscamos su PPID en las listas
-		for proceso in $lista_procesos; do	# comprueba si el proceso esta en la lista
-			if [ "$proceso" == "$ppid" ]; then
-				cd infierno
-				touch "$pid"
-				chmod 666 "$pid"	#Asignamos permisos infernales
-                break   # sale del bucle si el ppid esta en la lista
-			else
-				echo "Error! el proceso '$pid' no se encuentra en las listas."
-				echo "Comprobar con el comando './Fausto.sh list'"
-                echo "Su PPID es '$ppid'"
-			fi
-		done
-	fi
-
+	# Elimina el proceso de la lista para que no lo resucite el Demonio
+	sed -i "/$pid/d" "$2"
+	# Eliminamos el proceso hijo (proceso que se desea eliminar)
+	pgrep -P "$pid" | xargs kill -9
+	# Eliminamos el proceso padre enviando la senal SIGKILL
+	kill -9 "$pid"
 }
 
 # Ejecucion del comando
