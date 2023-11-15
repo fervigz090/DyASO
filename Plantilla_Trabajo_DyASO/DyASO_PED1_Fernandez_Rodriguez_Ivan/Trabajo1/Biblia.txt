@@ -1,7 +1,17 @@
-11:26:04: -------------Genesis-------------
-11:26:04: El demonio ha sido creado.
-11:26:04: El proceso 145412 'echo cacaaa' ha nacido
-11:26:50: El proceso 145939 'echo cacaaa >> test_cacaa.txt' ha nacido
-11:29:45: El proceso 147900 'echo cacaaa >> test_cacaa.txt' ha nacido
-11:32:58: El proceso 150055 'echo cacaaa' ha nacido
-11:36:03: -------------Apocalipsis-------------
+15:55:13: -------------Genesis-------------
+15:55:13: El demonio ha sido creado.
+15:55:13: El proceso 21464 'sleep 10; echo hola >> test1.txt' ha nacido
+15:55:13: El proceso 21477 'yes > /dev/null' ha nacido
+15:55:13: El proceso 21482 'echo hola_periodico >> test2.txt' ha nacido
+15:55:13: El proceso 21486 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+15:55:14: El demonio ha resucitado al proceso con PID 21477
+15:55:15: El demonio ha resucitado al proceso con PID 21477
+15:55:16: El demonio ha resucitado al proceso con PID 21477
+15:55:17: El demonio ha resucitado al proceso con PID 21477
+15:55:18: El demonio ha resucitado al proceso con PID 21477
+15:55:19: El demonio ha resucitado al proceso con PID 21477
+15:55:20: El demonio ha resucitado al proceso con PID 21477
+15:55:21: El demonio ha resucitado al proceso con PID 21477
+15:55:22: -------------Apocalipsis-------------
+15:55:22: El proceso 'yes' ha terminado
+15:55:22: El proceso '' ha terminado

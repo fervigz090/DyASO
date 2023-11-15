@@ -1,0 +1,160 @@
+
+************************************************************
+1) Debería de haberse creado el proceso Demonio
+la salida esperada es algo así
+systemd───systemd───Demonio.sh───sleep
+donde Demonio.sh no debe ser hijo de bash sino de systemd o similar
+************************************************************
+
+systemd---Demonio.sh---sleep
+
+************************************************************
+2) Lanzo algunos comandos y compruebo que se han creado
+Debería de haber un proceso normal
+'sleep 10; echo hola > test1.txt'
+Un proceso servicio 'yes > /dev/null'
+y dos periódicos, el normal y el lento
+Comparamos los procesos teóricamente lanzados y los que
+realmente existen
+************************************************************
+
+Procesos lanzados según Fausto:
+./Fausto.sh list
+***** Procesos normales *****
+21464 'sleep 10; echo hola >> test1.txt'
+***** Procesos servicio *****
+21477 'yes > /dev/null'
+***** Procesos periodicos *****
+0 5 21482 'echo hola_periodico >> test2.txt'
+0 5 21486 'echo hola_periodico_lento >> test3.txt; sleep 20'
+
+Procesos existentes:
+ps -l
+F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000    2378    2375  0  80   0 -  4203 sigsus pts/0    00:00:00 zsh
+0 S  1000   21442    2378  0  80   0 -  2339 do_wai pts/0    00:00:00 Ejercicio1.sh
+0 S  1000   21461       1  0  80   0 -  2339 do_wai pts/0    00:00:00 Demonio.sh
+0 S  1000   21464       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 S  1000   21468   21461  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000   21469   21464  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000   21477       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 R  1000   21479   21477 99  80   0 -  1932 -      pts/0    00:00:00 yes
+0 S  1000   21486       1  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 R  1000   21490   21442  0  80   0 -  3401 -      pts/0    00:00:00 ps
+
+************************************************************
+3) Elimino manualmente el proceso yes sin avisar a Fausto.
+El Demonio debería detectarlo y reiniciar el proceso:
+************************************************************
+
+pkill yes
+
+./Fausto.sh list
+***** Procesos normales *****
+21464 'sleep 10; echo hola >> test1.txt'
+***** Procesos servicio *****
+21477 'yes > /dev/null'
+***** Procesos periodicos *****
+0 5 21482 'echo hola_periodico >> test2.txt'
+0 5 21486 'echo hola_periodico_lento >> test3.txt; sleep 20'
+
+************************************************************
+4) Elimino el proceso usando Fausto.
+El Demonio NO debe reiniciar el proceso:
+************************************************************
+
+./Fausto.sh stop 21477
+Error! el proceso con PID: 21477 no esta en ejecucion
+./Fausto.sh list
+***** Procesos normales *****
+21464 'sleep 10; echo hola >> test1.txt'
+***** Procesos servicio *****
+21477 'yes > /dev/null'
+***** Procesos periodicos *****
+0 5 21482 'echo hola_periodico >> test2.txt'
+0 5 21486 'echo hola_periodico_lento >> test3.txt; sleep 20'
+ps -l
+F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000    2378    2375  0  80   0 -  4203 sigsus pts/0    00:00:00 zsh
+0 S  1000   21442    2378  0  80   0 -  2339 do_wai pts/0    00:00:00 Ejercicio1.sh
+0 S  1000   21461       1  0  80   0 -  2372 do_wai pts/0    00:00:00 Demonio.sh
+0 S  1000   21464       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 S  1000   21469   21464  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000   21486       1  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 R  1000   21600   21442  0  80   0 -  3401 -      pts/0    00:00:00 ps
+
+************************************************************
+5) Error de sintaxis provocado para que Fausto nos avise:
+************************************************************
+
+./Fausto.sh asdf
+Error, orden 'asdf' no reconocido, consulte las ordenes disponibles con ./Fausto.sh help
+
+************************************************************
+6) Siguiendo la sugerencia anterior veríamos la ayuda:
+************************************************************
+
+./Fausto.sh help
+Sintaxis:
+ ./Fausto.sh run comando
+ ./Fausto.sh run-service comando
+ ./Fausto.sh run-periodic T comando
+ ./Fausto.sh list
+ ./Fausto.sh help
+ ./Fausto.sh stop PID
+ ./Fausto.sh end
+
+************************************************************
+7) Terminamos la ejecución y vemos los mensajes enviados
+por los procesos lanzados en los ficeheros test 1, 2 y 3
+************************************************************
+
+hola
+
+************************************************************
+8) Comprobamos que no hay procesos sin terminar.
+Esperamos que sólo salgan bash, Ejercicio1.sh y ps
+************************************************************
+
+    PID TTY          TIME CMD
+   2378 pts/0    00:00:00 zsh
+  21442 pts/0    00:00:00 Ejercicio1.sh
+  21486 pts/0    00:00:00 sleep
+  21701 pts/0    00:00:00 ps
+
+************************************************************
+9) Comprobamos que no hay ficerhos basura.
+Solo deben quedar Fausto.sh, Demonio.sh y la Biblia.txt
+************************************************************
+
+Biblia.txt
+Demonio.sh
+Fausto.sh
+
+************************************************************
+10) Comprobamos que no hay bloqueos pendientes
+no debería de salir nada:
+************************************************************
+
+
+************************************************************
+11) Finalmente mostramos la Biblia
+************************************************************
+
+15:55:13: -------------Genesis-------------
+15:55:13: El demonio ha sido creado.
+15:55:13: El proceso 21464 'sleep 10; echo hola >> test1.txt' ha nacido
+15:55:13: El proceso 21477 'yes > /dev/null' ha nacido
+15:55:13: El proceso 21482 'echo hola_periodico >> test2.txt' ha nacido
+15:55:13: El proceso 21486 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+15:55:14: El demonio ha resucitado al proceso con PID 21477
+15:55:15: El demonio ha resucitado al proceso con PID 21477
+15:55:16: El demonio ha resucitado al proceso con PID 21477
+15:55:17: El demonio ha resucitado al proceso con PID 21477
+15:55:18: El demonio ha resucitado al proceso con PID 21477
+15:55:19: El demonio ha resucitado al proceso con PID 21477
+15:55:20: El demonio ha resucitado al proceso con PID 21477
+15:55:21: El demonio ha resucitado al proceso con PID 21477
+15:55:22: -------------Apocalipsis-------------
+15:55:22: El proceso 'yes' ha terminado
+15:55:22: El proceso '' ha terminado

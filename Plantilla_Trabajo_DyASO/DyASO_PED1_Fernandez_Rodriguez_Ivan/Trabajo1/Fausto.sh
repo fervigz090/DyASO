@@ -39,7 +39,7 @@ verificar_y_lanzar_demonio() {
 }
 
 # Recorrido lista para verificar PID (funcion STOP)
-verificar_pid_en_lista() {
+verificar_eliminar_proceso() {
 	local pid="$1"
 	local lista_procesos=$(awk '{print $1}' "$2") #nos quedamos con el ppid solo
 	pid_exec=$(ps -l | awk '{print $4}' | grep -v PID)
@@ -150,7 +150,7 @@ else
 			echo " ./Fausto.sh end"
 			;;
 		"stop")
-			verificar_pid_en_lista "$2" "procesos_servicio";
+			verificar_eliminar_proceso "$2" "procesos_servicio";
 			;;
 		"end")
 			touch Apocalipsis
