@@ -36,9 +36,10 @@ resucitar() {
 	# Obtiene el pid del padre
 	pid=$!
 	# Guarda el nuevo proceso en la lista
-	echo "$pid '$comando'" >> procesos_servicio
+	echo "$pid $comando" >> procesos_servicio
 	time=$(date +%H:%M:%S)
     echo $time: "El proceso $1 resucita con pid $pid" >> Biblia.txt
+
 }
 
 # Comprobacion de procesos periodicos y lanzamiento
@@ -89,12 +90,14 @@ while true; do
     fi
 
     # Comprobación procesos-servicio
-    pServicio="procesos_servicio"
+	procesos="procesos_servicio"
     while IFS=' ' read -r pidServ comando; do
         if proceso_en_ejecucion "$pidServ"; then
             echo "El proceso con PID $pidServ está en ejecución"
         else
             resucitar "$pidServ" "$comando"
+			pidServ=""
+			break
         fi
-    done < "$pServicio"
+    done < "$procesos"
 done

@@ -1,65 +1,72 @@
-17:16:38: -------------Genesis-------------
-17:16:38: El demonio ha sido creado.
-17:16:38: El proceso 77683 'yes > /dev/null' ha nacido
-17:16:39: El proceso 77699 'yes > /dev/null' ha nacido
-17:16:40: El proceso 77714 'yes > /dev/null' ha nacido
-17:19:05: El demonio ha resucitado al proceso con PID 77699
-17:19:06: El demonio ha resucitado al proceso con PID 77699
-17:19:07: El demonio ha resucitado al proceso con PID 77699
-17:19:08: El demonio ha resucitado al proceso con PID 77699
-17:19:09: El demonio ha resucitado al proceso con PID 77699
-17:19:10: El demonio ha resucitado al proceso con PID 77699
-17:19:11: El demonio ha resucitado al proceso con PID 77699
-17:19:12: El demonio ha resucitado al proceso con PID 77699
-17:19:13: El demonio ha resucitado al proceso con PID 77699
-17:19:14: El demonio ha resucitado al proceso con PID 77699
-17:19:15: El demonio ha resucitado al proceso con PID 77699
-17:19:16: El demonio ha resucitado al proceso con PID 77699
-17:19:17: El demonio ha resucitado al proceso con PID 77699
-17:19:18: El demonio ha resucitado al proceso con PID 77699
-17:19:19: El demonio ha resucitado al proceso con PID 77699
-17:19:20: El demonio ha resucitado al proceso con PID 77699
-17:19:21: El demonio ha resucitado al proceso con PID 77699
-17:19:22: El demonio ha resucitado al proceso con PID 77699
-17:19:23: El demonio ha resucitado al proceso con PID 77699
-17:19:24: El demonio ha resucitado al proceso con PID 77699
-17:19:25: El demonio ha resucitado al proceso con PID 77699
-17:19:26: El demonio ha resucitado al proceso con PID 77699
-17:19:27: El demonio ha resucitado al proceso con PID 77699
-17:19:28: El demonio ha resucitado al proceso con PID 77699
-17:19:29: El demonio ha resucitado al proceso con PID 77699
-17:19:30: El demonio ha resucitado al proceso con PID 77699
-17:19:31: El demonio ha resucitado al proceso con PID 77699
-17:19:32: El demonio ha resucitado al proceso con PID 77699
-17:19:33: El demonio ha resucitado al proceso con PID 77699
-17:19:34: El demonio ha resucitado al proceso con PID 77699
-17:19:35: El demonio ha resucitado al proceso con PID 77699
-17:19:36: El demonio ha resucitado al proceso con PID 77699
-17:19:37: El demonio ha resucitado al proceso con PID 77699
-17:19:38: El demonio ha resucitado al proceso con PID 77699
-17:19:39: El demonio ha resucitado al proceso con PID 77699
-17:19:40: El demonio ha resucitado al proceso con PID 77699
-17:19:41: El demonio ha resucitado al proceso con PID 77699
-17:19:42: El demonio ha resucitado al proceso con PID 77699
-17:19:43: El demonio ha resucitado al proceso con PID 77699
-17:19:44: El demonio ha resucitado al proceso con PID 77699
-17:19:45: El demonio ha resucitado al proceso con PID 77699
-17:19:46: El demonio ha resucitado al proceso con PID 77699
-17:19:47: El demonio ha resucitado al proceso con PID 77699
-17:19:48: El demonio ha resucitado al proceso con PID 77699
-17:19:49: El demonio ha resucitado al proceso con PID 77699
-17:19:50: El demonio ha resucitado al proceso con PID 77699
-17:19:51: El demonio ha resucitado al proceso con PID 77699
-17:19:52: El demonio ha resucitado al proceso con PID 77699
-17:19:53: El demonio ha resucitado al proceso con PID 77699
-17:19:54: El demonio ha resucitado al proceso con PID 77699
-17:19:55: El demonio ha resucitado al proceso con PID 77699
-17:19:56: El demonio ha resucitado al proceso con PID 77699
-17:19:57: El demonio ha resucitado al proceso con PID 77699
-17:19:58: El demonio ha resucitado al proceso con PID 77699
-17:19:59: El demonio ha resucitado al proceso con PID 77699
-17:20:00: El demonio ha resucitado al proceso con PID 77699
-17:20:01: El demonio ha resucitado al proceso con PID 77699
-17:20:02: -------------Apocalipsis-------------
-17:20:02: El proceso 'yes' ha terminado
-17:20:02: El proceso 'yes' ha terminado
+18:14:38: -------------Genesis-------------
+18:14:38: El demonio ha sido creado.
+18:14:38: El proceso 44458 'yes > /dev/null' ha nacido
+18:14:38: El proceso 44474 'yes > /dev/null' ha nacido
+18:14:39: El proceso 44487 'yes > /dev/null' ha nacido
+18:14:47: El proceso 44458 resucita con pid 44614
+18:14:48: El proceso 44614 resucita con pid 44633
+18:14:49: El proceso 44633 resucita con pid 44660
+18:14:50: El proceso 44660 resucita con pid 44677
+18:14:51: El proceso 44677 resucita con pid 44694
+18:14:52: El proceso 44694 resucita con pid 44711
+18:14:53: El proceso 44711 resucita con pid 44728
+18:14:55: El proceso 44728 resucita con pid 44745
+18:14:56: El proceso 44745 resucita con pid 44762
+18:14:57: El proceso 44762 resucita con pid 44781
+18:14:58: El proceso 44781 resucita con pid 44798
+18:14:59: El proceso 44798 resucita con pid 44815
+18:15:00: El proceso 44815 resucita con pid 44833
+18:15:01: El proceso 44833 resucita con pid 44853
+18:15:02: El proceso 44853 resucita con pid 44870
+18:15:03: El proceso 44870 resucita con pid 44887
+18:15:04: El proceso 44887 resucita con pid 44904
+18:15:05: El proceso 44904 resucita con pid 44921
+18:15:06: El proceso 44921 resucita con pid 44940
+18:15:07: El proceso 44940 resucita con pid 44964
+18:15:08: El proceso 44964 resucita con pid 44981
+18:15:09: El proceso 44981 resucita con pid 44998
+18:15:10: El proceso 44998 resucita con pid 45015
+18:15:12: El proceso 45015 resucita con pid 45032
+18:15:13: El proceso 45032 resucita con pid 45049
+18:15:14: El proceso 45049 resucita con pid 45066
+18:15:15: El proceso 45066 resucita con pid 45083
+18:15:16: El proceso 45083 resucita con pid 45103
+18:15:17: El proceso 45103 resucita con pid 45120
+18:15:18: El proceso 45120 resucita con pid 45137
+18:15:19: El proceso 45137 resucita con pid 45155
+18:15:20: El proceso 45155 resucita con pid 45174
+18:15:21: El proceso 45174 resucita con pid 45197
+18:15:22: El proceso 45197 resucita con pid 45214
+18:15:23: El proceso 45214 resucita con pid 45239
+18:15:24: El proceso 45239 resucita con pid 45256
+18:15:25: El proceso 45256 resucita con pid 45273
+18:15:26: El proceso 45273 resucita con pid 45290
+18:15:28: El proceso 45290 resucita con pid 45307
+18:15:29: El proceso 45307 resucita con pid 45325
+18:15:30: El proceso 45325 resucita con pid 45342
+18:15:31: El proceso 45342 resucita con pid 45359
+18:15:32: El proceso 45359 resucita con pid 45377
+18:15:33: El proceso 45377 resucita con pid 45394
+18:15:34: El proceso 45394 resucita con pid 45411
+18:15:35: El proceso 45411 resucita con pid 45428
+18:15:36: El proceso 45428 resucita con pid 45445
+18:15:37: El proceso 45445 resucita con pid 45462
+18:15:38: El proceso 45462 resucita con pid 45479
+18:15:39: El proceso 45479 resucita con pid 45496
+18:15:40: El proceso 45496 resucita con pid 45521
+18:15:41: El proceso 45521 resucita con pid 45538
+18:15:42: El proceso 45538 resucita con pid 45555
+18:15:43: El proceso 45555 resucita con pid 45572
+18:15:45: El proceso 45572 resucita con pid 45589
+18:15:46: El proceso 45589 resucita con pid 45606
+18:15:47: El proceso 45606 resucita con pid 45623
+18:15:48: El proceso 45623 resucita con pid 45640
+18:15:49: El proceso 45640 resucita con pid 45657
+18:15:50: El proceso 45657 resucita con pid 45674
+18:15:51: El proceso 45674 resucita con pid 45693
+18:15:52: El proceso 45693 resucita con pid 45711
+18:15:53: El proceso 45711 resucita con pid 45731
+18:15:54: -------------Apocalipsis-------------
+18:15:54: El proceso 'yes' ha terminado
+18:15:54: El proceso 'yes' ha terminado
+18:15:54: El proceso 'yes' ha terminado
