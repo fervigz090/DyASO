@@ -28,10 +28,15 @@ proceso_en_ejecucion() {
 # Resurrección de proceso
 resucitar() {
     local pid="$1"
-    local comando="$2"
-	# Elimina el proceso de la lista, ya que el nuevo no tiene el mismo pid ni ppid
-	sed -i "/$pid/d" procesos_servicio
+    local comando=$(echo "$2" | sed "s/'//g")
+    # Elimina el proceso hijo
+    pgrep -P "$pid" | xargs kill -9
+    # Elimina el proceso padre
+    kill -9 "$pid"
+    # Elimina el proceso de la lista, ya que el nuevo no tiene el mismo pid ni ppid
+    sed -i "/$pid/d" procesos_servicio
 	# Lanza de nuevo el comando como hijo de un proceso bash
+	echo "$comando" >> resultados.txt
 	bash -c "$comando" &
 	# Obtiene el pid del padre
 	pid=$!
@@ -69,7 +74,7 @@ while true; do
     if [ -e Apocalipsis ]; then
         # Eliminación de todos los procesos de las listas
 		time=$(date +%H:%M:%S)
-        echo $time:" -------------Apocalipsis-------------" >> Biblia.txt
+        echo "$time: -------------Apocalipsis-------------" >> Biblia.txt
       	pServicio="procesos_servicio"
 		while IFS=' ' read -r ppidServ comandoPS_completo; do
         	comandoPS=$(echo "$comandoPS_completo" | awk '{print $1}' | sed "s/'//") # Devuelve la palabra reservada del comando sin comillas
@@ -90,14 +95,12 @@ while true; do
     fi
 
     # Comprobación procesos-servicio
-	procesos="procesos_servicio"
     while IFS=' ' read -r pidServ comando; do
         if proceso_en_ejecucion "$pidServ"; then
             echo "El proceso con PID $pidServ está en ejecución"
         else
             resucitar "$pidServ" "$comando"
-			pidServ=""
 			break
         fi
-    done < "$procesos"
+    done < "procesos_servicio"
 done
