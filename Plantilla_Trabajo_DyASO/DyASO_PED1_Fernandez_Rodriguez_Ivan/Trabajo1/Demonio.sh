@@ -36,7 +36,6 @@ resucitar() {
     # Elimina el proceso de la lista, ya que el nuevo no tiene el mismo pid ni ppid
     sed -i "/$pid/d" procesos_servicio
 	# Lanza de nuevo el comando como hijo de un proceso bash
-	echo "$comando" >> resultados.txt
 	bash -c "$comando" &
 	# Obtiene el pid del padre
 	pid=$!
@@ -47,23 +46,7 @@ resucitar() {
 
 }
 
-# Comprobacion de procesos periodicos y lanzamiento
-# Parametros: $1(lista) $2
-lanzamiento_periodicos() {
-	local lista_procesos="$1"
-	for proceso in "${lista_procesos[@]}"; do
-    	IFS=' ' read -r tiempo_ejecutado periodo pid comando <<< "$proceso"
-    	current_time=$(date +%s)
-
-    	if ((current_time - tiempo_ejecutado >= periodo)); then
-        	eval "$comando" &
-        	# Actualiza el tiempo de ejecución
-        	lista_procesos[$i]="$current_time $periodo $pid '$comando'"
-			echo "$lista_procesos - $current_time" >> test_cacaa.txt
-    	fi
-	done
-}
-
+# Comienza el proceso Demonio
 while true; do
     sleep 1  # Espera 1 segundo
 
@@ -96,9 +79,7 @@ while true; do
 
     # Comprobación procesos-servicio
     while IFS=' ' read -r pidServ comando; do
-        if proceso_en_ejecucion "$pidServ"; then
-            echo "El proceso con PID $pidServ está en ejecución"
-        else
+        if ! proceso_en_ejecucion "$pidServ"; then
             resucitar "$pidServ" "$comando"
 			break
         fi
