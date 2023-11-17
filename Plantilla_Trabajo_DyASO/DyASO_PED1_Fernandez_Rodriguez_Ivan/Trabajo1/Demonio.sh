@@ -71,9 +71,10 @@ while true; do
 			echo $time:" El proceso '$comandoP' ha terminado" >> Biblia.txt
 		done < "$procesos"
 
-		find -type f \( ! -name "*.sh" -a ! -name "Biblia.txt" \) -exec rm -f {} \;
+		find -type f \( ! -name "*.sh" -a ! -name "Biblia.txt" -a ! -name "test*" \) -exec rm -f {} \;
 		find -type d -exec rm -r -f;
 		rm -r -f infierno
+		pkill sleep
 		kill $$ # Demonio.sh se elimina a si mismo
     fi
 

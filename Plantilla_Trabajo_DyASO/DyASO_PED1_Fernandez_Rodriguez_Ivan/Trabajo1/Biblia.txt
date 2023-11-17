@@ -1,9 +1,9 @@
-11:46:12: -------------Genesis-------------
-11:46:12: El demonio ha sido creado.
-11:46:12: El proceso 104618 'sleep 10; echo hola >> test1.txt' ha nacido
-11:46:12: El proceso 104630 'yes > /dev/null' ha nacido
-11:46:12: El proceso 104635 'echo hola_periodico >> test2.txt' ha nacido
-11:46:12: El proceso 104639 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
-11:46:13: El proceso 104630 resucita con pid 104663
-11:46:22: -------------Apocalipsis-------------
-11:46:22: El proceso '' ha terminado
+12:04:36: -------------Genesis-------------
+12:04:36: El demonio ha sido creado.
+12:04:36: El proceso 115228 'sleep 10; echo hola >> test1.txt' ha nacido
+12:04:36: El proceso 115240 'yes > /dev/null' ha nacido
+12:04:36: El proceso 115245 'echo hola_periodico >> test2.txt' ha nacido
+12:04:36: El proceso 115249 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+12:04:37: El proceso 115240 resucita con pid 115273
+12:04:46: -------------Apocalipsis-------------
+12:04:46: El proceso '' ha terminado

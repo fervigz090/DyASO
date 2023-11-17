@@ -21,26 +21,26 @@ realmente existen
 Procesos lanzados según Fausto:
 ./Fausto.sh list
 ***** Procesos normales *****
-104618 'sleep 10; echo hola >> test1.txt'
+115228 'sleep 10; echo hola >> test1.txt'
 ***** Procesos servicio *****
-104630 'yes > /dev/null'
+115240 'yes > /dev/null'
 ***** Procesos periodicos *****
-0 5 104635 'echo hola_periodico >> test2.txt'
-0 5 104639 'echo hola_periodico_lento >> test3.txt; sleep 20'
+0 5 115245 'echo hola_periodico >> test2.txt'
+0 5 115249 'echo hola_periodico_lento >> test3.txt; sleep 20'
 
 Procesos existentes:
 ps -l
 F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
-0 S  1000   13220   13217  0  80   0 -  4297 sigsus pts/0    00:00:10 zsh
-0 S  1000  104595   13220  0  80   0 -  2339 do_wai pts/0    00:00:00 Ejercicio1.sh
-0 S  1000  104614       1  0  80   0 -  2339 do_wai pts/0    00:00:00 Demonio.sh
-0 S  1000  104617  104614  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
-0 S  1000  104618       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
-0 S  1000  104622  104618  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
-0 S  1000  104630       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
-0 R  1000  104632  104630  0  80   0 -  1932 -      pts/0    00:00:00 yes
-0 S  1000  104639       1  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
-0 R  1000  104643  104595  0  80   0 -  3401 -      pts/0    00:00:00 ps
+0 S  1000   13220   13217  0  80   0 -  4297 sigsus pts/0    00:00:11 zsh
+0 S  1000  115205   13220  0  80   0 -  2339 do_wai pts/0    00:00:00 Ejercicio1.sh
+0 S  1000  115224       1  0  80   0 -  2339 do_wai pts/0    00:00:00 Demonio.sh
+0 S  1000  115227  115224  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000  115228       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 S  1000  115232  115228  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000  115240       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 R  1000  115242  115240 50  80   0 -  1932 -      pts/0    00:00:00 yes
+0 S  1000  115249       1  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 R  1000  115253  115205  0  80   0 -  3401 -      pts/0    00:00:00 ps
 
 ************************************************************
 3) Elimino manualmente el proceso yes sin avisar a Fausto.
@@ -51,36 +51,36 @@ pkill yes
 
 ./Fausto.sh list
 ***** Procesos normales *****
-104618 'sleep 10; echo hola >> test1.txt'
+115228 'sleep 10; echo hola >> test1.txt'
 ***** Procesos servicio *****
-104663 yes > /dev/null
+115273 yes > /dev/null
 ***** Procesos periodicos *****
-0 5 104635 'echo hola_periodico >> test2.txt'
-0 5 104639 'echo hola_periodico_lento >> test3.txt; sleep 20'
+0 5 115245 'echo hola_periodico >> test2.txt'
+0 5 115249 'echo hola_periodico_lento >> test3.txt; sleep 20'
 
 ************************************************************
 4) Elimino el proceso usando Fausto.
 El Demonio NO debe reiniciar el proceso:
 ************************************************************
 
-./Fausto.sh stop 104663
+./Fausto.sh stop 115273
 ./Fausto.sh list
 ***** Procesos normales *****
-104618 'sleep 10; echo hola >> test1.txt'
+115228 'sleep 10; echo hola >> test1.txt'
 ***** Procesos servicio *****
 ***** Procesos periodicos *****
-0 5 104635 'echo hola_periodico >> test2.txt'
-0 5 104639 'echo hola_periodico_lento >> test3.txt; sleep 20'
+0 5 115245 'echo hola_periodico >> test2.txt'
+0 5 115249 'echo hola_periodico_lento >> test3.txt; sleep 20'
 ps -l
 F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
-0 S  1000   13220   13217  0  80   0 -  4297 sigsus pts/0    00:00:10 zsh
-0 S  1000  104595   13220  0  80   0 -  2339 do_wai pts/0    00:00:00 Ejercicio1.sh
-0 S  1000  104614       1  0  80   0 -  2483 do_wai pts/0    00:00:00 Demonio.sh
-0 S  1000  104618       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
-0 S  1000  104622  104618  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
-0 S  1000  104639       1  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
-0 S  1000  104735  104614  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
-0 R  1000  104739  104595  0  80   0 -  3401 -      pts/0    00:00:00 ps
+0 S  1000   13220   13217  0  80   0 -  4297 sigsus pts/0    00:00:11 zsh
+0 S  1000  115205   13220  0  80   0 -  2339 do_wai pts/0    00:00:00 Ejercicio1.sh
+0 S  1000  115224       1  0  80   0 -  2483 do_wai pts/0    00:00:00 Demonio.sh
+0 S  1000  115228       1  0  80   0 -  2339 do_wai pts/0    00:00:00 bash
+0 S  1000  115232  115228  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000  115249       1  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 S  1000  115347  115224  0  80   0 -  1932 hrtime pts/0    00:00:00 sleep
+0 R  1000  115351  115205  0  80   0 -  3401 -      pts/0    00:00:00 ps
 
 ************************************************************
 5) Error de sintaxis provocado para que Fausto nos avise:
@@ -108,6 +108,9 @@ Sintaxis:
 por los procesos lanzados en los ficeheros test 1, 2 y 3
 ************************************************************
 
+hola
+hola_periodico
+hola_periodico_lento
 
 ************************************************************
 8) Comprobamos que no hay procesos sin terminar.
@@ -115,11 +118,10 @@ Esperamos que sólo salgan bash, Ejercicio1.sh y ps
 ************************************************************
 
     PID TTY          TIME CMD
-  13220 pts/0    00:00:10 zsh
- 104595 pts/0    00:00:00 Ejercicio1.sh
- 104639 pts/0    00:00:00 sleep
- 104822 pts/0    00:00:00 ps
-0  1000  102933   13253  20   0  10100  4096 wait_w S+   pts/1      0:00 nano Demonio.sh
+  13220 pts/0    00:00:11 zsh
+ 115205 pts/0    00:00:00 Ejercicio1.sh
+ 115416 pts/0    00:00:00 ps
+0  1000  112374   13253  20   0  10216  4224 wait_w S+   pts/1      0:00 nano Demonio.sh
 
 ************************************************************
 9) Comprobamos que no hay ficerhos basura.
@@ -140,12 +142,12 @@ no debería de salir nada:
 11) Finalmente mostramos la Biblia
 ************************************************************
 
-11:46:12: -------------Genesis-------------
-11:46:12: El demonio ha sido creado.
-11:46:12: El proceso 104618 'sleep 10; echo hola >> test1.txt' ha nacido
-11:46:12: El proceso 104630 'yes > /dev/null' ha nacido
-11:46:12: El proceso 104635 'echo hola_periodico >> test2.txt' ha nacido
-11:46:12: El proceso 104639 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
-11:46:13: El proceso 104630 resucita con pid 104663
-11:46:22: -------------Apocalipsis-------------
-11:46:22: El proceso '' ha terminado
+12:04:36: -------------Genesis-------------
+12:04:36: El demonio ha sido creado.
+12:04:36: El proceso 115228 'sleep 10; echo hola >> test1.txt' ha nacido
+12:04:36: El proceso 115240 'yes > /dev/null' ha nacido
+12:04:36: El proceso 115245 'echo hola_periodico >> test2.txt' ha nacido
+12:04:36: El proceso 115249 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+12:04:37: El proceso 115240 resucita con pid 115273
+12:04:46: -------------Apocalipsis-------------
+12:04:46: El proceso '' ha terminado

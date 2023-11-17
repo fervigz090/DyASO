@@ -64,7 +64,7 @@ else
 	case "$1" in
 		"run")	#ejecuta un comando una sola vez
 			bash -c "$comando" &	#instancia de bash en segundo plano
-			pid=$!	#obtenemos el pid del hijo mas reciente
+			pid=$!	#obtenemos el pid del padre
 			echo "$pid '$2'" >> procesos
 			echo "$time: El proceso $pid '$2' ha nacido" >> Biblia.txt
 			;;
