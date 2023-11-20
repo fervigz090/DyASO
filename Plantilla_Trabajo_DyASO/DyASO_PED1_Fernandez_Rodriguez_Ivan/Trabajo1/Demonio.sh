@@ -50,9 +50,6 @@ resucitar() {
 while true; do
     sleep 1  # Espera 1 segundo
 
-	# Comprobamos y lanzamos procesos periodicos
-	lanzamiento_periodicos "procesos_periodicos"
-
     # Comprobación del apocalipsis
     if [ -e Apocalipsis ]; then
         # Eliminación de todos los procesos de las listas
