@@ -49,8 +49,38 @@ verificar_eliminar_proceso() {
 	kill -9 "$pid"
 }
 
-# Ejecucion del comando
+# Funcion lanzamiento de procesos periodicos
+lanzamiento_periodico() {
+	local periodo_T="$1"
+	local comando="$2"
+	arranque=$(date +%s) # momento en el que se lanza el proceso la primera vez
 
+	# Lanzamiento periodico del proceso
+	while true; do
+        # Hora de inicio del proceso actual
+        t_inicio=$(date +%s)
+
+        # Ejecutar el comando
+        bash -c "$comando" &
+		pid=$!
+
+        # Hora de finalización del proceso actual
+        t_fin=$(date +%s)
+
+        # Calcular el tiempo transcurrido en segundos
+        t_transcurrido=$((t_fin - t_inicio))
+
+        # Calcular el tiempo restante hasta el próximo período
+        t_restante=$((periodo_T - (t_transcurrido % periodo_T)))
+
+		# Guardar el proceso en la lista y una entrada en Biblia.txt
+		echo "$t_transcurrido $periodo_T $pid '$comando'" >> procesos_periodicos
+		echo "$time: El proceso $pid '$comando' ha nacido" >> Biblia.txt
+
+        # Esperar hasta el siguiente período
+        sleep "$t_restante"
+    done
+}
 
 
 #Recibe órdenes creando los procesos y listas adecuadas
@@ -77,11 +107,7 @@ else
 		"run-periodic")
 			comando="$3"
 			periodo_T="$2"
-			t_arranque=0
-			bash -c "$comando" &
-			pid=$!
-			echo "$t_arranque $periodo_T $pid '$comando'" >> procesos_periodicos
-			echo "$time: El proceso $pid '$comando' ha nacido" >> Biblia.txt
+			lanzamiento_periodico "$periodo_T" "$comando" &
 			;;
 		"list")
 			echo "***** Procesos normales *****"
