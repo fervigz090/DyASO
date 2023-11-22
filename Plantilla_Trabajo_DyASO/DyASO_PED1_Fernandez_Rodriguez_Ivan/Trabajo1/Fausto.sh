@@ -54,14 +54,13 @@ lanzamiento_periodico() {
 	local periodo_T="$1"
 	local comando="$2"
 	arranque=$(date +%s) # momento en el que se lanza el proceso la primera vez
-
 	# Lanzamiento periodico del proceso
 	while true; do
         # Hora de inicio del proceso actual
         t_inicio=$(date +%s)
 
         # Ejecutar el comando
-        bash -c "$comando" &
+        nohup bash -c "$comando" > /dev/null 2>&1 &
 		pid=$!
 
         # Hora de finalización del proceso actual
@@ -107,7 +106,7 @@ else
 		"run-periodic")
 			comando="$3"
 			periodo_T="$2"
-			lanzamiento_periodico "$periodo_T" "$comando" &
+			nohup bash -c lanzamiento_periodico "$periodo_T" "$comando" &
 			;;
 		"list")
 			echo "***** Procesos normales *****"

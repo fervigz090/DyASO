@@ -55,6 +55,8 @@ while true; do
         # Eliminación de todos los procesos de las listas
 		time=$(date +%H:%M:%S)
         echo "$time: -------------Apocalipsis-------------" >> Biblia.txt
+
+		# Procesos servicio
       	pServicio="procesos_servicio"
 		while IFS=' ' read -r ppidServ comandoPS_completo; do
         	comandoPS=$(echo "$comandoPS_completo" | awk '{print $1}' | sed "s/'//") # Devuelve la palabra reservada del comando sin comillas
@@ -62,11 +64,20 @@ while true; do
 			echo $time:" El proceso '$comandoPS' ha terminado" >> Biblia.txt
 		done < "$pServicio"
 
+		# Procesos normales
 		procesos="procesos"
 		while IFS=' ' read -r ppid comandoP_completo; do
 			kill ppid
 			echo $time:" El proceso '$comandoP' ha terminado" >> Biblia.txt
 		done < "$procesos"
+
+		# Procesos periodicos
+		pPeriodicos="procesos_periodicos"
+		while IFS=' ' read -r T_arranque T ppid comando; do
+			kill ppid
+			pkill Fausto.sh
+			echo $time:" El proceso '$comando' ha terminado" >> Biblia.txt
+		done < "$pPeriodicos"
 
 		find -type f \( ! -name "*.sh" -a ! -name "Biblia.txt" -a ! -name "test*" \) -exec rm -f {} \;
 		find -type d -exec rm -r -f;
