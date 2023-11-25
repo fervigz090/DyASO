@@ -1,3 +1,25 @@
-12:27:17: -------------Genesis-------------
-12:27:17: El demonio ha sido creado.
-13:02:52: -------------Apocalipsis-------------
+11:15:46: -------------Genesis-------------
+11:15:46: El demonio ha sido creado.
+11:15:46: El proceso 138517 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+11:15:46: El proceso 138566 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+11:15:46: El proceso 138607 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+11:15:46: El proceso 138657 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+11:15:46: El proceso 138707 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+11:15:46: El proceso 138761 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+11:15:46: El proceso 138814 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+11:15:46: El proceso 138864 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+11:15:46: El proceso 138914 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+11:15:46: El proceso 138966 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+11:15:46: El proceso 139022 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido
+11:16:38: -------------Apocalipsis-------------
+11:16:38: El proceso ''echo hola_periodico_lento >> test3.txt; sleep 20'' ha terminado
+11:16:38: El proceso ''echo hola_periodico_lento >> test3.txt; sleep 20'' ha terminado
+11:16:38: El proceso ''echo hola_periodico_lento >> test3.txt; sleep 20'' ha terminado
+11:16:38: El proceso ''echo hola_periodico_lento >> test3.txt; sleep 20'' ha terminado
+11:16:38: El proceso ''echo hola_periodico_lento >> test3.txt; sleep 20'' ha terminado
+11:16:38: El proceso ''echo hola_periodico_lento >> test3.txt; sleep 20'' ha terminado
+11:16:38: El proceso ''echo hola_periodico_lento >> test3.txt; sleep 20'' ha terminado
+11:16:38: El proceso ''echo hola_periodico_lento >> test3.txt; sleep 20'' ha terminado
+11:16:38: El proceso ''echo hola_periodico_lento >> test3.txt; sleep 20'' ha terminado
+11:16:38: El proceso ''echo hola_periodico_lento >> test3.txt; sleep 20'' ha terminado
+11:16:38: El proceso ''echo hola_periodico_lento >> test3.txt; sleep 20'' ha terminado

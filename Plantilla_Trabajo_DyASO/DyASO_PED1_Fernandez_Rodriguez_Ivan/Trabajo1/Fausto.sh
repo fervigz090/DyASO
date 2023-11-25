@@ -60,7 +60,7 @@ lanzamiento_periodico() {
         t_inicio=$(date +%s)
 
         # Ejecutar el comando
-        nohup bash -c "$comando" > /dev/null 2>&1 &
+        eval "$comando" > /dev/null 2>&1 &
 		pid=$!
 
         # Hora de finalización del proceso actual
@@ -106,7 +106,7 @@ else
 		"run-periodic")
 			comando="$3"
 			periodo_T="$2"
-			nohup bash -c lanzamiento_periodico "$periodo_T" "$comando" &
+			lanzamiento_periodico "$periodo_T" "$comando" &
 			;;
 		"list")
 			echo "***** Procesos normales *****"
