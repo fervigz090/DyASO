@@ -45,6 +45,27 @@ resucitar() {
     echo $time: "El proceso $1 resucita con pid $pid" >> Biblia.txt
 
 }
+# Lanzamiento procesos periodicos
+lanzamiento_periodico() {
+    while read -r t_actual T ppid cmd; do
+   	    modulo=$((t_actual % T))
+		echo "$modulo" >> probas.txt
+        if [ "$modulo" -eq 0 ]; then
+            # Ejecutar el comando y mantener el proceso en lista si es necesario
+			echo "$cmd" >> probas.txt
+            eval "$cmd"
+            t_actual=$((t_actual + 1))
+        else
+            # Incrementar el tiempo y mantener el proceso en lista si es necesario
+            t_actual=$((t_actual + 1))
+        fi
+
+        # Actualizar la entrada en el archivo 'procesos_periodicos'
+        sed -i "/\b$ppid\b/d" procesos_periodicos
+        echo "$t_actual $T $ppid $cmd" >> procesos_periodicos
+    done < "procesos_periodicos"
+}
+
 
 # Comienza el proceso Demonio
 while true; do
@@ -68,7 +89,7 @@ while true; do
 		procesos="procesos"
 		while IFS=' ' read -r ppid comandoP_completo; do
 			kill ppid
-			echo $time:" El proceso '$comandoP' ha terminado" >> Biblia.txt
+			echo $time:" El proceso $comandoP_completo ha terminado" >> Biblia.txt
 		done < "$procesos"
 
 		# Procesos periodicos
@@ -76,7 +97,7 @@ while true; do
 		while IFS=' ' read -r T_arranque T ppid comando; do
 			kill ppid
 			pkill Fausto.sh
-			echo $time:" El proceso '$comando' ha terminado" >> Biblia.txt
+			echo $time:" El proceso $comando ha terminado" >> Biblia.txt
 		done < "$pPeriodicos"
 
 		find -type f \( ! -name "*.sh" -a ! -name "Biblia.txt" -a ! -name "test*" \) -exec rm -f {} \;
@@ -95,21 +116,7 @@ while true; do
     done < "procesos_servicio"
 
 	# Comprobacion procesos-periodicos
-	while IFS=' ' read -r t_actual T ppid cmd; do
-		# Comprueba si t_actual es multiplo de T
-		modulo=$((t_actual % T))
-		if [ "$modulo" -eq 0 ]; then
-			eval "$cmd"
-			sed -i "/\b$ppid\b/d" procesos_periodicos
-			t_actual=$((t_actual + 1))
-			echo "$t_actual $T $ppid $cmd" >> procesos_periodicos
-		else
-			# elimina el proceso de la lista y lo reintroduce con el tiempo actualizado
-			sed -i "/\b$ppid\b/d" procesos_periodicos
-			t_actual=$((t_actual + 1))
-			echo "$t_actual $T $ppid $cmd" >> procesos_periodicos
-		fi
-	done < "procesos_periodicos"
+	lanzamiento_periodico &
 done
 
 

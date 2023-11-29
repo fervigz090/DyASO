@@ -47,6 +47,7 @@ verificar_eliminar_proceso() {
 	pgrep -P "$pid" | xargs kill -9
 	# Eliminamos el proceso padre enviando la senal SIGKILL
 	kill -9 "$pid"
+	echo $time:" El proceso $pid ha terminado" >> Biblia.txt
 }
 
 #Recibe órdenes creando los procesos y listas adecuadas
@@ -73,9 +74,10 @@ else
 		"run-periodic")
 			cmd="$3"
 			T="$2"
-			bash -c "$cmd" &
+			bash -c "$cmd" & 
 			pid=$!
 			echo "0 $T $pid '$cmd'" >> procesos_periodicos
+			echo "$time: El proceso $pid '$cmd' ha nacido" >> Biblia.txt
 			;;
 		"list")
 			echo "***** Procesos normales *****"
