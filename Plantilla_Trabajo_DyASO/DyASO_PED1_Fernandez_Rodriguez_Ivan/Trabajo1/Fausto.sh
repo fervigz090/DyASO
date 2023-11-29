@@ -4,7 +4,7 @@
 # FUNCIONES
 
 # Creacion de archivos al inicio
-inicializar (){
+inicializar(){
 	touch procesos
 	touch procesos_servicio
 	touch procesos_periodicos
@@ -14,7 +14,7 @@ inicializar (){
 }
 
 # Borrado inicial
-borrado (){
+borrado(){
 
 	rm -f procesos
 	rm -f procesos_servicio
@@ -49,39 +49,6 @@ verificar_eliminar_proceso() {
 	kill -9 "$pid"
 }
 
-# Funcion lanzamiento de procesos periodicos
-lanzamiento_periodico() {
-	local periodo_T="$1"
-	local comando="$2"
-	arranque=$(date +%s) # momento en el que se lanza el proceso la primera vez
-	# Lanzamiento periodico del proceso
-	while true; do
-        # Hora de inicio del proceso actual
-        t_inicio=$(date +%s)
-
-        # Ejecutar el comando
-        eval "$comando" > /dev/null 2>&1 &
-		pid=$!
-
-        # Hora de finalización del proceso actual
-        t_fin=$(date +%s)
-
-        # Calcular el tiempo transcurrido en segundos
-        t_transcurrido=$((t_fin - t_inicio))
-
-        # Calcular el tiempo restante hasta el próximo período
-        t_restante=$((periodo_T - (t_transcurrido % periodo_T)))
-
-		# Guardar el proceso en la lista y una entrada en Biblia.txt
-		echo "$t_transcurrido $periodo_T $pid '$comando'" >> procesos_periodicos
-		echo "$time: El proceso $pid '$comando' ha nacido" >> Biblia.txt
-
-        # Esperar hasta el siguiente período
-        sleep "$t_restante"
-    done
-}
-
-
 #Recibe órdenes creando los procesos y listas adecuadas
 
 if [ $# -eq 0 ]; then	#Si no hay argumentos se verifica la existencia del demonio
@@ -104,9 +71,11 @@ else
 			echo "$time: El proceso $pid '$2' ha nacido" >> Biblia.txt
 			;;
 		"run-periodic")
-			comando="$3"
-			periodo_T="$2"
-			lanzamiento_periodico "$periodo_T" "$comando" &
+			cmd="$3"
+			T="$2"
+			bash -c "$cmd" &
+			pid=$!
+			echo "0 $T $pid '$cmd'" >> procesos_periodicos
 			;;
 		"list")
 			echo "***** Procesos normales *****"

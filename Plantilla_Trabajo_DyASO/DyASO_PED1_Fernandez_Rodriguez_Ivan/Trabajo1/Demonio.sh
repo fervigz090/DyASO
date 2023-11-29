@@ -31,7 +31,7 @@ resucitar() {
     local comando=$(echo "$2" | sed "s/'//g")
     # Elimina el proceso hijo
     pgrep -P "$pid" | xargs kill -9
-    # Elimina el proceso padre
+    # Elimina el proceso padre con senal KILL
     kill -9 "$pid"
     # Elimina el proceso de la lista, ya que el nuevo no tiene el mismo pid ni ppid
     sed -i "/$pid/d" procesos_servicio
@@ -93,4 +93,34 @@ while true; do
 			break
         fi
     done < "procesos_servicio"
+
+	# Comprobacion procesos-periodicos
+	while IFS=' ' read -r t_actual T ppid cmd; do
+		# Comprueba si t_actual es multiplo de T
+		modulo=$((t_actual % T))
+		if [ "$modulo" -eq 0 ]; then
+			eval "$cmd"
+			sed -i "/\b$ppid\b/d" procesos_periodicos
+			t_actual=$((t_actual + 1))
+			echo "$t_actual $T $ppid $cmd" >> procesos_periodicos
+		else
+			# elimina el proceso de la lista y lo reintroduce con el tiempo actualizado
+			sed -i "/\b$ppid\b/d" procesos_periodicos
+			t_actual=$((t_actual + 1))
+			echo "$t_actual $T $ppid $cmd" >> procesos_periodicos
+		fi
+	done < "procesos_periodicos"
 done
+
+
+
+
+
+
+
+
+
+
+
+
+
