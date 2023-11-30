@@ -33,8 +33,8 @@ verificar_y_lanzar_demonio() {
 		inicializar
         nohup ./Demonio.sh > /dev/null 2>&1 &
 		time=$(date +%H:%M:%S)
-		echo $time:" -------------Genesis-------------" >> Biblia.txt
-		echo $time:" El demonio ha sido creado." >> Biblia.txt
+		flock SanPedro echo $time:" -------------Genesis-------------" >> Biblia.txt
+		flock SanPedro echo $time:" El demonio ha sido creado." >> Biblia.txt
     fi
 }
 
@@ -42,12 +42,12 @@ verificar_y_lanzar_demonio() {
 verificar_eliminar_proceso() {
 	local pid="$1"
 	# Elimina el proceso de la lista para que no lo resucite el Demonio
-	sed -i "/$pid/d" "$2"
+	flock SanPedro sed -i "/$pid/d" "$2"
 	# Eliminamos el proceso hijo (proceso que se desea eliminar)
 	pgrep -P "$pid" | xargs kill -9
 	# Eliminamos el proceso padre enviando la senal SIGKILL
 	kill -9 "$pid"
-	echo $time:" El proceso $pid ha terminado" >> Biblia.txt
+	flock SanPedro echo $time:" El proceso $pid ha terminado" >> Biblia.txt
 }
 
 #Recibe órdenes creando los procesos y listas adecuadas
@@ -62,22 +62,22 @@ else
 		"run")	#ejecuta un comando una sola vez
 			bash -c "$comando" &	#instancia de bash en segundo plano
 			pid=$!	#obtenemos el pid del padre
-			echo "$pid '$2'" >> procesos
-			echo "$time: El proceso $pid '$2' ha nacido" >> Biblia.txt
+			flock SanPedro echo "$pid '$2'" >> procesos
+			flock SanPedro echo "$time: El proceso $pid '$2' ha nacido" >> Biblia.txt
 			;;
 		"run-service")
 			bash -c "$comando" &
 			pid=$!
-			echo "$pid '$2'" >> procesos_servicio
-			echo "$time: El proceso $pid '$2' ha nacido" >> Biblia.txt
+			flock SanPedro echo "$pid '$2'" >> procesos_servicio
+			flock SanPedro echo "$time: El proceso $pid '$2' ha nacido" >> Biblia.txt
 			;;
 		"run-periodic")
 			cmd="$3"
 			T="$2"
 			bash -c "$cmd" &
 			pid=$!
-			echo "0 $T $pid '$cmd'" >> procesos_periodicos
-			echo "$time: El proceso $pid '$cmd' ha nacido" >> Biblia.txt
+			flock SanPedro echo "0 $T $pid '$cmd'" >> procesos_periodicos
+			flock SanPedro echo "$time: El proceso $pid '$cmd' ha nacido" >> Biblia.txt
 			;;
 		"list")
 			echo "***** Procesos normales *****"
@@ -121,7 +121,7 @@ else
 			echo " ./Fausto.sh end"
 			;;
 		"stop")
-			verificar_eliminar_proceso "$2" "procesos_servicio";
+			verificar_eliminar_proceso "$2" "procesos_servicio"
 			;;
 		"end")
 			touch Apocalipsis
@@ -131,8 +131,4 @@ else
 			;;
 	esac
 fi
-
-#Si el Demonio no está vivo lo crea
-
-#Al leer/escribir en las listas hay que usar bloqueo para no coincidir con el Demonio
 
