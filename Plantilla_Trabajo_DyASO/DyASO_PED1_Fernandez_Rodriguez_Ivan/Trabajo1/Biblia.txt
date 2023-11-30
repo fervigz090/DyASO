@@ -1,5 +1,0 @@
-18:31:52: -------------Genesis-------------
-18:31:52: El demonio ha sido creado.
-18:31:52: El proceso 49796 'echo hola_periodico >> test2.txt' ha nacido
-18:32:30: -------------Apocalipsis-------------
-18:32:30: El proceso echo hola_periodico >> test2.txt ha terminado
