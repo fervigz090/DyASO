@@ -74,7 +74,7 @@ else
 		"run-periodic")
 			cmd="$3"
 			T="$2"
-			bash -c "$cmd" & 
+			bash -c "$cmd" &
 			pid=$!
 			echo "0 $T $pid '$cmd'" >> procesos_periodicos
 			echo "$time: El proceso $pid '$cmd' ha nacido" >> Biblia.txt
