@@ -33,8 +33,8 @@ verificar_y_lanzar_demonio() {
 		inicializar
         nohup ./Demonio.sh > /dev/null 2>&1 &
 		time=$(date +%H:%M:%S)
-		flock SanPedro echo $time:" -------------Genesis-------------" >> Biblia.txt
-		flock SanPedro echo $time:" El demonio ha sido creado." >> Biblia.txt
+		flock SanPedro -c "echo $time: -------------Genesis------------- >> Biblia.txt"
+		flock SanPedro -c "echo $time: El demonio ha sido creado. >> Biblia.txt"
     fi
 }
 
@@ -42,12 +42,15 @@ verificar_y_lanzar_demonio() {
 verificar_eliminar_proceso() {
 	local pid="$1"
 	# Elimina el proceso de la lista para que no lo resucite el Demonio
-	flock SanPedro sed -i "/$pid/d" "$2"
+	# Bloqueo de la lista procesos servicio
+	flock procesos_servicio -c "{
+		sed -i "/$pid/d" "$2"
+	}"
 	# Eliminamos el proceso hijo (proceso que se desea eliminar)
 	pgrep -P "$pid" | xargs kill -9
 	# Eliminamos el proceso padre enviando la senal SIGKILL
 	kill -9 "$pid"
-	flock SanPedro echo $time:" El proceso $pid ha terminado" >> Biblia.txt
+	flock SanPedro -c "echo $time: El proceso $pid ha terminado >> Biblia.txt"
 }
 
 #Recibe órdenes creando los procesos y listas adecuadas
@@ -62,29 +65,30 @@ else
 		"run")	#ejecuta un comando una sola vez
 			bash -c "$comando" &	#instancia de bash en segundo plano
 			pid=$!	#obtenemos el pid del padre
-			flock SanPedro echo "$pid '$2'" >> procesos
-			flock SanPedro echo "$time: El proceso $pid '$2' ha nacido" >> Biblia.txt
+			flock procesos -c "echo $pid '$2' >> procesos"
+			flock SanPedro -c "echo $time: El proceso $pid '$2' ha nacido >> Biblia.txt"
 			;;
 		"run-service")
 			bash -c "$comando" &
 			pid=$!
-			flock SanPedro echo "$pid '$2'" >> procesos_servicio
-			flock SanPedro echo "$time: El proceso $pid '$2' ha nacido" >> Biblia.txt
+			flock procesos_servicio -c "echo $pid '$2' >> procesos_servicio"
+			flock SanPedro -c "echo $time: El proceso $pid '$2' ha nacido >> Biblia.txt"
 			;;
 		"run-periodic")
 			cmd="$3"
 			T="$2"
 			bash -c "$cmd" &
 			pid=$!
-			flock SanPedro echo "0 $T $pid '$cmd'" >> procesos_periodicos
-			flock SanPedro echo "$time: El proceso $pid '$cmd' ha nacido" >> Biblia.txt
+			flock procesos_periodicos -c "echo 0 $T $pid '$cmd' >> procesos_periodicos"
+			flock SanPedro -c "echo $time: El proceso $pid '$cmd' ha nacido >> Biblia.txt"
 			;;
 		"list")
 			echo "***** Procesos normales *****"
 			# Comprobamos que existe el fichero y que no esta vacio
 			if [ -e procesos ] && [ -s procesos ]; then
 				procesos="procesos"
-				# Recorremos cada linea devolviendola
+				# Bloqueo de procesos para lectura
+
             	while IFS=' ' read -r ppid comando; do
                 	echo "$ppid $comando"
             	done < "$procesos"
@@ -94,7 +98,8 @@ else
 			# Comprobamos que existe el fichero y que no esta vacio
 			if [ -e procesos_servicio ] && [ -s procesos_servicio ]; then
 				procesos_servicio="procesos_servicio"
-				# Recorremos cada linea del fichero devolviendola.
+				# Bloqueo de procesos_servicio para lectura
+
 				while IFS=' ' read -r ppid comando; do
 					echo "$ppid $comando"
 				done < "$procesos_servicio"
@@ -104,7 +109,7 @@ else
 			# Comprobamos que existe el fichero y que no esta vacio
 			if [ -e procesos_periodicos ] && [ -s procesos_periodicos ]; then
 				procesos_periodicos="procesos_periodicos"
-				# Recorremos cada linea del fichero devolviendola
+
 				while IFS=' ' read -r t_arranque T ppid comando; do
 					echo "$t_arranque $T $ppid $comando"
 				done < "$procesos_periodicos"
