@@ -77,9 +77,7 @@ else
 		"run-periodic")
 			cmd="$3"
 			T="$2"
-			bash -c "$cmd" &
-			pid=$!
-			flock procesos_periodicos -c "echo 0 $T $pid '$cmd' >> procesos_periodicos"
+			flock procesos_periodicos -c "echo 0 $T pid '$cmd' >> procesos_periodicos"
 			flock SanPedro -c "echo $time: El proceso $pid '$cmd' ha nacido >> Biblia.txt"
 			;;
 		"list")

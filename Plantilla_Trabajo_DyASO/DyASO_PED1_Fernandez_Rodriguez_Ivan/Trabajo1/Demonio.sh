@@ -89,15 +89,23 @@ while true; do
         fi
     done < "procesos_servicio"
 
-# Comprobación procesos-periodicos con bloqueo
+# Comprobación procesos-periodicos
 
     while read -r t_actual T ppid cmd; do
+		time=$(date +%H:%M:%S)
+		#Extraemos el tiempo de espera adicional
+		espera=$(echo "$cmd" | awk -F ';' '{print $2}')
+		nppid=$ppid
+		if [ "$espera" -gt 0 ]; then
+			T=$(T + espera)
+		fi
     	modulo=$((t_actual % T))
     	if [ "$modulo" -eq 0 ]; then
-        	# Ejecutar el comando y mantener el proceso en lista si es necesario
 			cmd=$(echo "$cmd" | sed "s/'//")
 			eval "$cmd" &
-        	t_actual=$((t_actual + 1))
+			nppid=$!
+			echo "$time: El proceso $ppid se reencarna con pid $nppid" >> Biblia.txt
+      		t_actual=$((t_actual + 1))
     	else
         	# Incrementar el tiempo y mantener el proceso en lista si es necesario
         	t_actual=$((t_actual + 1))
@@ -105,6 +113,7 @@ while true; do
 
         # Actualizar la entrada en el archivo procesos_periodicos
         sed -i "/\b$ppid\b/d" procesos_periodicos
+		ppid=$nppid
         echo "$t_actual $T $ppid $cmd" >> procesos_periodicos
     done < "procesos_periodicos"
 done
