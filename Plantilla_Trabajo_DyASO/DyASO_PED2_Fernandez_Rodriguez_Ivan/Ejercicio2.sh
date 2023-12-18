@@ -34,12 +34,16 @@
 
 	# nohup bash -c ./Trabajo2/PADRE > /dev/null 2>&1
 	./Trabajo2/PADRE 10
+	pid=$!
+	echo "$pid -> pid a eliminar"
 
 #al acabar limpia todos los ficheros que ha creado
 	sleep 15
+	kill $pid
 	rm Trabajo2/HIJO
 	rm Trabajo2/PADRE
 	rm Trabajo2/resultado
+	rm mensajes
 
 
 
