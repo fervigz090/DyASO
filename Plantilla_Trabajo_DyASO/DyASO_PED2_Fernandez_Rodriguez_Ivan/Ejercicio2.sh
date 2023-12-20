@@ -21,7 +21,6 @@
 	if [ ! -p "$fifo" ]; then
 		# Si no existe, creamos el fichero
 		mkfifo "$fifo"
-		echo "Fichero '$fifo' creado correctamente."
 	else
 		echo "Fichero '$fifo' ya existe."
 	fi
@@ -29,17 +28,16 @@
 #lanza un cat en segundo plano para leer "resultado"
 
 	cat < "$fifo" &
+	cat_pid=$!
 
 #lanza el proceso padre
 
 	# nohup bash -c ./Trabajo2/PADRE > /dev/null 2>&1
 	./Trabajo2/PADRE 10
 	pid=$!
-	echo "$pid -> pid a eliminar"
 
 #al acabar limpia todos los ficheros que ha creado
-	sleep 15
-	kill $pid
+	sleep 10
 	rm Trabajo2/HIJO
 	rm Trabajo2/PADRE
 	rm Trabajo2/resultado
