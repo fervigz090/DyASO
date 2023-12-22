@@ -8,163 +8,125 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#define PERM 0666 //Permisos para la cola de mensajes
+#define PERM 0666 // Permisos para la cola de mensajes
 
-int main(int argc, char *argv[]){
-	int num_contendientes;
-	key_t key;
-	int msgid; // Cola de mensajes
-	int shmid; // Memoria compartida
-	int semid; // Semaforo
-	struct sembuf p_op = {0, -1, 0}; // Operación P (espera)
-	struct sembuf v_op = {0,  1, 0}; // Operación V (señal)
-	int pid;
+int main(int argc, char *argv[]) {
+    int num_contendientes;
+    key_t key;
+    int msgid; // Cola de mensajes
+    int shmid; // Memoria compartida
+    int semid; // Semáforo
+    struct sembuf p_op = {0, -1, 0}; // Operación P (espera)
+    struct sembuf v_op = {0, 1, 0};  // Operación V (señal)
+    int pid;
+    int barrera[2]; // Tubería barrera
+    FILE *resultado; // Archivo asociado a la tubería 'resultado'
 
-	if (argc != 2) {
+    if (argc != 2) {
         printf("Uso: %s <num_contendientes>\n", argv[0]);
         return 1;
     }
 
-    num_contendientes = atoi(argv[1]); // Convertir el argumento a entero
+    num_contendientes = atoi(argv[1]);
 
+    // Abriendo tubería 'resultado'
+    resultado = fopen("Trabajo2/resultado", "w");
+    if (resultado == NULL) {
+        perror("fopen resultado");
+        exit(EXIT_FAILURE);
+    }
 
-// CREAR COLA DE MENSAJES
+    // Crear tubería barrera
+    if (pipe(barrera) == -1) {
+        perror("pipe barrera");
+        exit(EXIT_FAILURE);
+    }
 
-	// Generar una clave unica
-	if ((key = ftok(".", 'X')) == -1) {
-		perror("Error al generar la clave");
-		exit(1);
-	}
+    // Crear clave única
+    if ((key = ftok(".", 'X')) == -1) {
+        perror("ftok");
+        exit(EXIT_FAILURE);
+    }
 
-	// Crear o acceder a la cola de mensajes
-	if ((msgid = msgget(key, PERM | IPC_CREAT)) == -1) {
-		perror("Error al crear/acceder a la cola de mensajes");
-		exit(1);
-	}
+    // Crear cola de mensajes
+    if ((msgid = msgget(key, PERM | IPC_CREAT)) == -1) {
+        perror("msgget");
+        exit(EXIT_FAILURE);
+    }
 
-	// Redirigir la salida estandar hacia el archivo mensajes
-	if (freopen("mensajes", "w", stdout) == NULL) {
-		perror("Error al redirigir la salida estandar");
-		exit(1);
-	}
+    // Crear semáforo
+    semid = semget(key, 1, IPC_CREAT | 0666);
+    if (semid == -1) {
+        perror("semget");
+        exit(EXIT_FAILURE);
+    }
+    if (semctl(semid, 0, SETVAL, 1) == -1) {
+        perror("semctl");
+        exit(EXIT_FAILURE);
+    }
 
-	// Mostrar el identificador de la cola de mensajes en el archivo
-	printf("Cola de mensajes creada con identificador: %d\n", msgid);
-
-// CREAR SEMAFORO
-
-	// Crear y comprobar
-	semid = semget(key, 1, IPC_CREAT | 0666);
-	if (semid == -1) {
-		perror("semget");
-		exit(EXIT_FAILURE);
-	}
-
-	// Inicializar (Necesario antes de su uso)
-	if(semctl(semid, 0, SETVAL, 1) == -1) {
-		perror("semctl");
-		exit(EXIT_FAILURE);
-	}
-
-// CREAR REGION DE MEMORIA COMPARTIDA
-
-	// Crear la región de memoria compartida
+    // Crear región de memoria compartida
     shmid = shmget(key, sizeof(pid_t) * num_contendientes, IPC_CREAT | 0666);
     if (shmid == -1) {
         perror("shmget");
         exit(EXIT_FAILURE);
     }
-
-    // Adjuntar la region de memoria compartida al espacio de direcciones del proceso
-    pid_t *pids = (pid_t *)shmat(shmid, NULL, 0);
-    if (pids == (pid_t *)(-1)) {
+    pid_t *lista = (pid_t *)shmat(shmid, NULL, 0);
+    if (lista == (pid_t *)-1) {
         perror("shmat");
         exit(EXIT_FAILURE);
     }
 
-    // Uso de la memoria compartida
-
-
-
-// CREAR N HIJOS Y ALMACENAR PIDs EN "lista"
-
-    pid_t *lista; // Declaración del puntero al array en la memoria compartida
-
-	// Adjuntar la memoria compartida
-	lista = (pid_t *)shmat(shmid, NULL, 0);
-	if (lista == (pid_t *)-1) {
-	    perror("Error en shmat");
-	    exit(EXIT_FAILURE);
-	}
-
-
-	for (int i = 0; i < num_contendientes; ++i) {
+    // Crear procesos hijo y almacenar PIDs en 'lista'
+    for (int i = 0; i < num_contendientes; ++i) {
         pid = fork();
 
         if (pid < 0) {
-            // Error al crear el proceso hijo
-            perror("Error en fork");
+            perror("fork");
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
-            // Código ejecutado por el proceso hijo
-            execl("./Trabajo2/HIJO", "Trabajo2/HIJO", (char *)NULL); 
-
-            // Si execl() retorna, hubo un error
-            perror("Error en execl");
+            // Código del proceso hijo
+            char buffer;
+            read(barrera[0], &buffer, 1); // Esperar señal del padre
+            execl("./Trabajo2/HIJO", "Trabajo2/HIJO", (char *)NULL);
+            perror("execl");
             exit(EXIT_FAILURE);
-        }  else {
-	        // Código del proceso padre
-
-	        // Operación P (esperar) en el semáforo antes de escribir en la memoria compartida
-			semop(semid, &p_op, 1);
-
-	        lista[i] = pid; // Almacena el PID del hijo en la memoria compartida
-
-	        // Operación V (señal) en el semáforo después de escribir en la memoria compartida
-			semop(semid, &v_op, 1);
-		}
-	}
-
-    // El proceso padre puede esperar a que los hijos terminen
-    while (wait(NULL) > 0);
-
-// ABRIR TUBERIA FIFO "resultado"
-	FILE *fifo;
-	fifo = fopen("Trabajo2/resultado", "w"); // Abrir para escritura
-	if (fifo == NULL) {
-	    perror("Error al abrir el FIFO");
-	    exit(EXIT_FAILURE);
-	}
-
-	// Usar fprintf o fputs para escribir en el FIFO
-	fprintf(fifo, "Mensaje del proceso padre\n");
-
-	// TEST lista
-	// Suponiendo que lista es un array de pid_t y almacena los PIDs de los procesos hijos
-	for (int i = 0; i < num_contendientes; ++i) {
-	    fprintf(fifo, "Proceso hijo %d tiene PID: %d\n", i+1, lista[i]);
-	}
-
-	// Cerrar el FIFO al final
-	fclose(fifo);
-
-
-
-
-
-
-
-    // Desasociar la region de memoria compartida del espacio de direcciones del proceso
-    if (shmdt(pids) == -1) {
-        perror("shmdt");
-        exit(EXIT_FAILURE);
+        } else {
+            // Código del proceso padre
+            fprintf(resultado, "Proceso hijo %d creado con PID %d\n", i + 1, pid);
+            fflush(resultado);
+            semop(semid, &p_op, 1);
+            lista[i] = pid; // Almacenar PID del hijo
+            semop(semid, &v_op, 1);
+        }
     }
 
-    // Marcar la region de memoria compartida para su eliminacion
+    fprintf(resultado, "Todos los procesos hijo han sido creados.\n");
+    fflush(resultado);
+
+    // Sincronización con hijos: enviar señal a través de la tubería
+    for (int i = 0; i < num_contendientes; ++i) {
+        write(barrera[1], "x", 1);
+    }
+
+    fprintf(resultado, "Señales enviadas a los procesos hijo.\n");
+    fflush(resultado);
+
+    // Esperar a que todos los hijos terminen
+    for (int i = 0; i < num_contendientes; ++i) {
+        wait(NULL);
+    }
+
+    fprintf(resultado, "Todos los procesos hijo han terminado.\n");
+    fflush(resultado);
+
+    // Limpieza
+    fclose(resultado);
+    close(barrera[0]);
+    close(barrera[1]);
+    shmdt(lista);
     shmctl(shmid, IPC_RMID, NULL);
+    semctl(semid, 0, IPC_RMID);
 
-
-
-
-	return 0;
+    return 0;
 }
