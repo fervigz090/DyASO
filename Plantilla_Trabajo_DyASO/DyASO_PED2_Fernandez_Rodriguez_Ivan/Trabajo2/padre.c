@@ -7,6 +7,7 @@
 #include <sys/sem.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #define PERM 0666 // Permisos para la cola de mensajes
 
@@ -32,8 +33,14 @@ int main(int argc, char *argv[]) {
     // Abriendo tubería 'resultado'
     resultado = fopen("Trabajo2/resultado", "w");
     if (resultado == NULL) {
-        perror("fopen resultado");
+        perror("Error fopen 'resultado'");
         exit(EXIT_FAILURE);
+    }
+
+    // Cambiar permisos de la tubería FIFO
+    if (chmod("Trabajo2/resultado", 0666) == -1) { 
+        perror("Error chmod 'resultado'");
+        return 1;
     }
 
     // Crear tubería barrera
@@ -77,6 +84,10 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    // Pasamos num_contendientes a string
+    char num_contendientes_str[20];
+    sprintf(num_contendientes_str, "%d", num_contendientes);     
+
     // Crear procesos hijo y almacenar PIDs en 'lista'
     for (int i = 0; i < num_contendientes; ++i) {
         pid = fork();
@@ -88,7 +99,11 @@ int main(int argc, char *argv[]) {
             // Código del proceso hijo
             char buffer;
             read(barrera[0], &buffer, 1); // Esperar señal del padre
-            execl("./Trabajo2/HIJO", "Trabajo2/HIJO", (char *)NULL);
+            fprintf(resultado, "Ejecutando execl para el proceso hijo %d\n", getpid());
+            fflush(resultado);
+
+
+            execl("Trabajo2/HIJO", num_contendientes_str, (char *)NULL);
             perror("execl");
             exit(EXIT_FAILURE);
         } else {
@@ -116,6 +131,8 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < num_contendientes; ++i) {
         wait(NULL);
     }
+
+    sleep(2);
 
     fprintf(resultado, "Todos los procesos hijo han terminado.\n");
     fflush(resultado);
