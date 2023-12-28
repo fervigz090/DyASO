@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
             fflush(resultado);
 
 
-            execl("Trabajo2/HIJO", num_contendientes_str, readEndStr,(char *)NULL);
+            execl("Trabajo2/HIJO", "HIJO", num_contendientes_str, readEndStr,(char *)NULL);
             perror("execl");
             exit(EXIT_FAILURE);
         } else {
@@ -123,23 +123,43 @@ int main(int argc, char *argv[]) {
 
     sleep(2);
 
-    // Sincronización con hijos: enviar señal a través de la tubería
-    for (int i = 0; i < num_contendientes; ++i) {
-        write(barrera[1], "x", 1);
-    }
+    // Bucle while para cada ronda
+    int contador = 1;
+    int rondasActivas = 1;
+    while (rondasActivas) {
 
-    fprintf(resultado, "Señales enviadas a los procesos hijo.\n");
-    fflush(resultado);
+        // Sincronización de inicio de ronda
+        for (int i = 0; i < num_contendientes; ++i) {
+            if (lista[i] != 0) { // Suponiendo que 0 significa 'no activo'
+                write(barrera[1], "x", 1);
+            }
+        }
+
+        fprintf(resultado, "Señales enviadas a los procesos hijo vivos.\n");
+        fprintf(resultado, "Inicio RONDA %d\n", contador);
+        fflush(resultado);
+
+        // Comprobar el estado de los procesos hijo
+        rondasActivas = 0;
+        for (int i = 1; i < num_contendientes; ++i) {
+            if (lista[i] != 0) {
+                rondasActivas = 1;
+                break;
+            }
+        }
+
+        sleep(2);
+
+        fprintf(resultado, "Todos los procesos hijo han terminado.\n");
+        fflush(resultado);
+        contador++;
+
+    }
 
     // Esperar a que todos los hijos terminen
     for (int i = 0; i < num_contendientes; ++i) {
         wait(NULL);
     }
-
-    sleep(2);
-
-    fprintf(resultado, "Todos los procesos hijo han terminado.\n");
-    fflush(resultado);
 
     // Limpieza
     fclose(resultado);

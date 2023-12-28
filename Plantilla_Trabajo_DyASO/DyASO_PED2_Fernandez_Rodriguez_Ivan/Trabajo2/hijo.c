@@ -25,9 +25,9 @@ void indefenso(int signum) {
 int main(int argc, char *argv[]){
 
 	int num_contendientes;
-	num_contendientes = atoi(argv[0]); // Convertir el argumento a entero
+	num_contendientes = atoi(argv[1]); // Convertir el argumento a entero
 
-	int readEnd = atoi(argv[1]);
+	int readEnd = atoi(argv[2]);
 
 	// Abrir tuberia 'resultado' en modo agregar
 	FILE *resultado = fopen("Trabajo2/resultado", "a");
@@ -104,9 +104,9 @@ int main(int argc, char *argv[]){
 
 		// Atacar. Elige un PID aleatorio, excepto el suyo.
 		int target;
-		do {
+		
 		    target = rand() % num_contendientes;
-		} while (shared_memory[target] == getpid() || shared_memory[target] == 0);
+		
 
 		printf("%d Atacando al proceso %d\n", getpid(), shared_memory[target]);
 		kill(shared_memory[target], SIGUSR1);
