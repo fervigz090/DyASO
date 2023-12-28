@@ -86,7 +86,11 @@ int main(int argc, char *argv[]) {
 
     // Pasamos num_contendientes a string
     char num_contendientes_str[20];
-    sprintf(num_contendientes_str, "%d", num_contendientes);     
+    sprintf(num_contendientes_str, "%d", num_contendientes);
+
+    // Pasamos descriptor de lectura a string
+    char readEndStr[10];
+    sprintf(readEndStr, "%d", barrera[0]);   
 
     // Crear procesos hijo y almacenar PIDs en 'lista'
     for (int i = 0; i < num_contendientes; ++i) {
@@ -97,13 +101,11 @@ int main(int argc, char *argv[]) {
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
             // Código del proceso hijo
-            char buffer;
-            read(barrera[0], &buffer, 1); // Esperar señal del padre
             fprintf(resultado, "Ejecutando execl para el proceso hijo %d\n", getpid());
             fflush(resultado);
 
 
-            execl("Trabajo2/HIJO", num_contendientes_str, (char *)NULL);
+            execl("Trabajo2/HIJO", num_contendientes_str, readEndStr,(char *)NULL);
             perror("execl");
             exit(EXIT_FAILURE);
         } else {
@@ -118,6 +120,8 @@ int main(int argc, char *argv[]) {
 
     fprintf(resultado, "Todos los procesos hijo han sido creados.\n");
     fflush(resultado);
+
+    sleep(2);
 
     // Sincronización con hijos: enviar señal a través de la tubería
     for (int i = 0; i < num_contendientes; ++i) {

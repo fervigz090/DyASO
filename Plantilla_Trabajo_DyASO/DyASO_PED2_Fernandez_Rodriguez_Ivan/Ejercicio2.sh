@@ -41,8 +41,6 @@
 	rm Trabajo2/HIJO
 	rm Trabajo2/PADRE
 	rm Trabajo2/resultado
-	rm mensajes
-
 
 
 

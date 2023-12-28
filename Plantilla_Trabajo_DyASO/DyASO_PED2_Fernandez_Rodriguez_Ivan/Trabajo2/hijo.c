@@ -25,8 +25,9 @@ void indefenso(int signum) {
 int main(int argc, char *argv[]){
 
 	int num_contendientes;
+	num_contendientes = atoi(argv[0]); // Convertir el argumento a entero
 
-	num_contendientes = atoi(argv[1]); // Convertir el argumento a entero
+	int readEnd = atoi(argv[1]);
 
 	// Abrir tuberia 'resultado' en modo agregar
 	FILE *resultado = fopen("Trabajo2/resultado", "a");
@@ -34,9 +35,6 @@ int main(int argc, char *argv[]){
         perror("Error al abrir la tubería resultado");
         exit(EXIT_FAILURE);
     }
-
-    fprintf(resultado, "holahola");
-	    fflush(resultado);
 
 	// Re-establecer mecanismos IPC (key='X')
 	key_t key;
@@ -78,6 +76,10 @@ int main(int argc, char *argv[]){
 	    exit(EXIT_FAILURE);
 	}
 
+	// readEnd para leer de la tuberia
+	char buffer;
+	read(readEnd, &buffer, 1);
+
 
 	// Fase de preparacion
 
@@ -87,31 +89,30 @@ int main(int argc, char *argv[]){
 	char estado[3] = "OK"; // Estado inicial
 
 	if (decision % 2 == 0) {
-	    // Defensor
+	    // DEFENSOR
 	    signal(SIGUSR1, defensa);  // Configura la señal SIGUSR1 para la función defensa
 	    usleep(200000); // Espera 0.2 segundos
 	    strcpy(estado, "OK");
-	    fprintf(resultado, "Proceso %2d defensor", getpid());
+	    fprintf(resultado, "Proceso %2d defensor\n", getpid());
 	    fflush(resultado);
 	} else {
-	    // Atacante
+	    // ATACANTE
 	    signal(SIGUSR1, indefenso); // Configura la señal SIGUSR1 para la función indefenso
 	    usleep(100000); // Espera 0.1 segundos antes de atacar
-	    fprintf(resultado, "Proceso %2d atacante", getpid());
+	    fprintf(resultado, "Proceso %2d atacante\n", getpid());
 	    fflush(resultado);
-	    // Elegir un PID aleatorio y atacar
-	    // ...
+
+		// Atacar. Elige un PID aleatorio, excepto el suyo.
+		int target;
+		do {
+		    target = rand() % num_contendientes;
+		} while (shared_memory[target] == getpid() || shared_memory[target] == 0);
+
+		printf("%d Atacando al proceso %d\n", getpid(), shared_memory[target]);
+		kill(shared_memory[target], SIGUSR1);
+		usleep(100000); // Espera 0.1 segundos adicionales
+
 	}
-
-	// Atacar. Elige un PID aleatorio, excepto el suyo.
-	int target;
-	do {
-	    target = rand() % num_contendientes;
-	} while (shared_memory[target] == getpid() || shared_memory[target] == 0);
-
-	printf("Atacando al proceso %d\n", shared_memory[target]);
-	kill(shared_memory[target], SIGUSR1);
-	usleep(100000); // Espera 0.1 segundos adicionales
 
 
 	fclose(resultado);
