@@ -121,44 +121,44 @@ int main(int argc, char *argv[]) {
     fprintf(resultado, "Todos los procesos hijo han sido creados.\n");
     fflush(resultado);
 
-    sleep(2);
+    sleep(1);
 
-    // Bucle while para cada ronda
     int contador = 1;
     int rondasActivas = 1;
-    while (rondasActivas) {
 
-        // Sincronización de inicio de ronda
+    // Bucle while para cada ronda
+    while (rondasActivas) {
+        // Reiniciar num_contendientes para esta ronda
+        int num_contendientes_activos = 0;
+
+        // Enviar señal de inicio de ronda
         for (int i = 0; i < num_contendientes; ++i) {
             if (lista[i] != 0) { // Suponiendo que 0 significa 'no activo'
                 write(barrera[1], "x", 1);
+                num_contendientes_activos++; // Contar contendientes activos
             }
         }
 
-        fprintf(resultado, "Señales enviadas a los procesos hijo vivos.\n");
+        fprintf(resultado, "Señales enviadas a %d procesos hijo vivos.\n", num_contendientes_activos);
         fprintf(resultado, "Inicio RONDA %d\n", contador);
         fflush(resultado);
 
-        // Comprobar el estado de los procesos hijo
-        rondasActivas = 0;
-        for (int i = 1; i < num_contendientes; ++i) {
-            if (lista[i] != 0) {
-                rondasActivas = 1;
-                break;
-            }
-        }
+        // Esperar un tiempo para que la ronda se complete
+        sleep(1);
 
-        sleep(2);
+        // Comprobar el estado de los procesos hijo para la siguiente ronda
+        rondasActivas = num_contendientes_activos > 0;
 
-        fprintf(resultado, "Todos los procesos hijo han terminado.\n");
+        fprintf(resultado, "Fin RONDA %d\n", contador);
         fflush(resultado);
         contador++;
-
     }
 
     // Esperar a que todos los hijos terminen
     for (int i = 0; i < num_contendientes; ++i) {
-        wait(NULL);
+        if (lista[i] != 0) {
+            waitpid(lista[i], NULL, 0); // Esperar por cada hijo activo
+        }
     }
 
     // Limpieza
