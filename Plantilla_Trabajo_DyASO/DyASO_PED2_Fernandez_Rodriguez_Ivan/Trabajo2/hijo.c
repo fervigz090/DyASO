@@ -12,6 +12,8 @@
 #include <string.h>
 #include <signal.h>
 
+char estado[3] = "OK"; // Estado inicial
+
 void defensa(int signum) {
     printf("El hijo %d ha repelido un ataque\n", getpid());
     
@@ -19,15 +21,17 @@ void defensa(int signum) {
 
 void indefenso(int signum) {
     printf("El hijo %d ha sido emboscado mientras realizaba un ataque\n", getpid());
-    
+    strcpy(estado, "KO");
 }
+
 
 int main(int argc, char *argv[]){
 
-	int num_contendientes;
-	num_contendientes = atoi(argv[1]); // Convertir el argumento a entero
-
+	int es_atacante = 0;
+	int num_contendientes = atoi(argv[1]); // Convertir el argumento a entero
 	int readEnd = atoi(argv[2]);
+	int indice = -1;
+	pid_t miPid = getpid();
 
 	// Abrir tuberia 'resultado' en modo agregar
 	FILE *resultado = fopen("Trabajo2/resultado", "a");
@@ -80,13 +84,30 @@ int main(int argc, char *argv[]){
 	char buffer;
 	read(readEnd, &buffer, 1);
 
+	// Obtener indice en 'lista' para actualizar el estado al
+	// final de cada ronda
+	for (int i = 0; i < num_contendientes; ++i) {
+	    if (lista[i] == miPid) {
+	        miIndice = i;
+	        break;
+	    }
+	}
+
+	if (miIndice != -1) {
+	    // Actualizar el estado en la memoria compartida
+	    strcpy(estados[indice], "OK");
+	} else {
+	    perror("Error al actualizar estado en hijo.c");
+	    exit(EXIT_FAILURE);
+	}
+
 
 	// Fase de preparacion
 
 	srand(time(NULL) ^ (getpid() << 16)); // Inicializar la semilla aleatoria
 	int decision = rand();
 
-	char estado[3] = "OK"; // Estado inicial
+	
 
 	if (decision % 2 == 0) {
 	    // DEFENSOR

@@ -8,8 +8,17 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <string.h>
 
 #define PERM 0666 // Permisos para la cola de mensajes
+
+// Estructura para los mensajes
+typedef struct {
+    long mtype;  // Tipo de mensaje (por ejemplo, 1)
+    pid_t pid;   // PID del proceso hijo
+    char estado[3]; // Estado del proceso hijo ('OK' o 'KO')
+} mensaje;
+
 
 int main(int argc, char *argv[]) {
     int num_contendientes;
@@ -20,6 +29,7 @@ int main(int argc, char *argv[]) {
     struct sembuf p_op = {0, -1, 0}; // Operación P (espera)
     struct sembuf v_op = {0, 1, 0};  // Operación V (señal)
     int pid;
+    char (*estados)[3];
     int barrera[2]; // Tubería barrera
     FILE *resultado; // Archivo asociado a la tubería 'resultado'
 
@@ -147,7 +157,7 @@ int main(int argc, char *argv[]) {
         sleep(1);
 
         // Comprobar el estado de los procesos hijo para la siguiente ronda
-        rondasActivas = num_contendientes_activos > 0;
+        rondasActivas = num_contendientes_activos > 1;
 
         fprintf(resultado, "Fin RONDA %d\n", contador);
         fflush(resultado);
@@ -155,7 +165,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Esperar a que todos los hijos terminen
-    for (int i = 0; i < num_contendientes; ++i) {
+    for (int i = 1; i < num_contendientes; ++i) {
         if (lista[i] != 0) {
             waitpid(lista[i], NULL, 0); // Esperar por cada hijo activo
         }
