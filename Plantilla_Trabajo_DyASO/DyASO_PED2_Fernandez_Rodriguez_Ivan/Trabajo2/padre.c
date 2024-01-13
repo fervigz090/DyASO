@@ -9,8 +9,10 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <stdbool.h>
+#include <errno.h>
 
-#define PERM 0666 // Permisos para la cola de mensajes
+#define PERM 0666 // Permisos
 
 // Estructura para los mensajes
 typedef struct {
@@ -72,9 +74,9 @@ int main(int argc, char *argv[]) {
     }
 
     // Crear semáforo
-    semid = semget(key, 1, IPC_CREAT | 0666);
+    semid = semget(key, 1, IPC_CREAT | 0777);
     if (semid == -1) {
-        perror("semget");
+        perror("fallo en semget");
         exit(EXIT_FAILURE);
     }
     if (semctl(semid, 0, SETVAL, 1) == -1) {
@@ -99,7 +101,7 @@ int main(int argc, char *argv[]) {
     sprintf(num_contendientes_str, "%d", num_contendientes);
 
     // Pasamos descriptor de lectura a string
-    char readEndStr[10];
+    char readEndStr[num_contendientes];
     sprintf(readEndStr, "%d", barrera[0]);   
 
     // Crear procesos hijo y almacenar PIDs en 'lista'
@@ -111,10 +113,6 @@ int main(int argc, char *argv[]) {
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
             // Código del proceso hijo
-            fprintf(resultado, "Ejecutando execl para el proceso hijo %d\n", getpid());
-            fflush(resultado);
-
-
             execl("Trabajo2/HIJO", "HIJO", num_contendientes_str, readEndStr,(char *)NULL);
             perror("execl");
             exit(EXIT_FAILURE);
@@ -135,39 +133,115 @@ int main(int argc, char *argv[]) {
 
     int contador = 1;
     int rondasActivas = 1;
+    int num_contendientes_activos = num_contendientes;
 
     // Bucle while para cada ronda
-    while (rondasActivas) {
-        // Reiniciar num_contendientes para esta ronda
-        int num_contendientes_activos = 0;
+    while (num_contendientes_activos > 1) {
 
-        // Enviar señal de inicio de ronda
-        for (int i = 0; i < num_contendientes; ++i) {
-            if (lista[i] != 0) { // Suponiendo que 0 significa 'no activo'
-                write(barrera[1], "x", 1);
-                num_contendientes_activos++; // Contar contendientes activos
-            }
-        }
-
-        fprintf(resultado, "Señales enviadas a %d procesos hijo vivos.\n", num_contendientes_activos);
-        fprintf(resultado, "Inicio RONDA %d\n", contador);
+        fprintf(resultado, "\n\nInicio RONDA %d\n\n", contador);
         fflush(resultado);
 
-        // Esperar un tiempo para que la ronda se complete
-        sleep(1);
+        // Reiniciar num_contendientes para esta ronda
+        num_contendientes_activos = 0;
+
+        // Leer mensajes de cola de mensajes
+        mensaje msg;
+        int res;
+
+        while (true) {
+
+            res = msgrcv(msgid, &msg, sizeof(mensaje) - sizeof(long), 1, IPC_NOWAIT);
+
+            if (res == -1) {
+                if (errno == ENOMSG) {
+                    // No hay más mensajes en la cola
+                    // Enviar señal de inicio de ronda
+                    num_contendientes_activos = 0;
+                    semop(semid, &p_op, 1); // Espera antes de acceder a 'barrera'
+                    for (int i = 0; i < num_contendientes; ++i) {
+                        if (lista[i] != 0) { // 0 significa 'no activo'
+                            write(barrera[1], "x", 1);
+                            num_contendientes_activos++; // Contar contendientes activos
+                        }
+                    }
+                    semop(semid, &v_op, 1); // Señal después de la sección crítica
+
+                    if (num_contendientes_activos < 2) {
+                        break;
+                    }
+
+                    fprintf(resultado, "Señales enviadas a %d procesos hijo vivos.\n", num_contendientes_activos);
+
+                    // Esperar un segundo para que la ronda se complete
+                    sleep(1);
+
+                    num_contendientes = num_contendientes_activos;
+                    break; // Sale del bucle
+                } else {
+                    // Ocurrió un error distinto de "no hay mensajes"
+                    perror("msgrcv");
+                    exit(EXIT_FAILURE);
+                }
+            } else {
+                // Mensaje recibido exitosamencdcesarlo
+                if (strcmp(msg.estado, "KO") == 0) {
+                    semop(semid, &p_op, 1); // Espera antes de acceder a 'lista'
+                    
+                    for (int i = 0; i < num_contendientes; ++i) {
+                        if (lista[i] == msg.pid) {
+                            // Terminar el proceso hijo con estado KO
+                            if (kill(lista[i], SIGTERM) == -1) {
+                                perror("kill");
+                                exit(EXIT_FAILURE);
+                            }
+
+                            // Esperar al proceso hijo para recoger su estado y evitar procesos zombi
+                            waitpid(lista[i], NULL, 0);
+                            // Proceso hijo con estado KO, marcar como no activo
+                            lista[i] = 0;
+                            break;
+                        }
+                    }
+                    
+                    semop(semid, &v_op, 1); // Señal después de la sección crítica
+                }
+            }
+        }
 
         // Comprobar el estado de los procesos hijo para la siguiente ronda
         rondasActivas = num_contendientes_activos > 1;
 
-        fprintf(resultado, "Fin RONDA %d\n", contador);
+        sleep(1);
+
+        fprintf(resultado, "Fin RONDA %d\n\n", contador);
         fflush(resultado);
         contador++;
     }
+    
+    // Elimina los hijos restantes despues de la batalla
+    if (num_contendientes > 0) {
+        for (int i = 0; i < num_contendientes; ++i) {
+            if (lista[i] != 0) {
+                // Enviar señal de terminación al proceso hijo
+                kill(lista[i], SIGTERM);
+
+                fprintf(resultado, "***** El hijo %d ha ganado! *****\n\n", lista[i]);
+                fflush(resultado);
+
+                // Esperar al proceso hijo para recoger su estado
+                waitpid(lista[i], NULL, 0);
+            }
+        }
+    } else {
+        fprintf(resultado, "Empate!\n");
+        fflush(resultado);
+    }
+
 
     // Esperar a que todos los hijos terminen
-    for (int i = 1; i < num_contendientes; ++i) {
+    for (int i = 0; i < num_contendientes; ++i) {
         if (lista[i] != 0) {
-            waitpid(lista[i], NULL, 0); // Esperar por cada hijo activo
+            waitpid(lista[i], NULL, 0);
         }
     }
 
@@ -177,7 +251,16 @@ int main(int argc, char *argv[]) {
     close(barrera[1]);
     shmdt(lista);
     shmctl(shmid, IPC_RMID, NULL);
-    semctl(semid, 0, IPC_RMID);
+
+    // Liberar el conjunto de semáforos
+    if (semctl(semid, IPC_RMID, 0) == -1) {
+        perror("semctl IPC_RMID");
+    }
+
+    // Liberar la cola de mensajes
+    if (msgctl(msgid, IPC_RMID, NULL) == -1) {
+        perror("msgctl IPC_RMID");
+    }
 
     return 0;
 }

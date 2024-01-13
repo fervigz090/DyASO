@@ -37,12 +37,15 @@
 	pid=$!
 
 #al acabar limpia todos los ficheros que ha creado
-	sleep 10
+	sleep 15
 	rm Trabajo2/HIJO
 	rm Trabajo2/PADRE
 	rm Trabajo2/resultado
+	pkill HIJO # por si quedan hijos huerfanos
 
+#comprueba que se liberaron los mecanismos IPC
 
+	ipcs -q -s
 
 
 
