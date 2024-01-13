@@ -110,7 +110,7 @@ int main(int argc, char *argv[]){
 	}
 
 	// Conectarse al semaforo
-	semid = semget(key, 1, 0666);
+	semid = semget(key, 1, 0777);
 	if (semid == -1) {
 	    perror("semget");
 	    exit(EXIT_FAILURE);
